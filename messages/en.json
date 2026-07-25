@@ -60,6 +60,28 @@
     "loginButton": "Log in",
     "signupButton": "Sign up"
   },
+  "Asset": {
+    "back": "Back to dashboard",
+    "chartError": "Couldn't load the chart",
+    "chartEmpty": "No data to show",
+    "fundamentalsTitle": "Key financials",
+    "fundamentalsError": "Couldn't load financials",
+    "analystConsensus": "Analyst consensus",
+    "analysts": "analysts",
+    "target": "Target",
+    "marketCap": "Market cap",
+    "trailingPE": "P/E (TTM)",
+    "forwardPE": "P/E (fwd)",
+    "eps": "EPS",
+    "dividendYield": "Dividend yield",
+    "revenue": "Revenue",
+    "grossMargin": "Gross margin",
+    "ebitdaMargin": "EBITDA margin",
+    "debtToEquity": "Debt/Equity",
+    "currentRatio": "Current ratio",
+    "beta": "Beta",
+    "week52Range": "52-week range"
+  },
   "Dashboard": {
     "tabs": {
       "market": "Market",

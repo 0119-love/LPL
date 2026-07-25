@@ -60,10 +60,10 @@ export function MarketTab() {
           return (
             <GlassCard key={item.watchlistId} className="flex flex-col gap-3">
               <div className="flex items-start justify-between">
-                <div>
+                <Link href={`/asset/${item.ticker}`} className="min-w-0 hover:opacity-80">
                   <p className="font-medium">{item.ticker}</p>
-                  <p className="text-xs text-foreground-muted">{item.name}</p>
-                </div>
+                  <p className="text-xs text-foreground-muted truncate">{item.name}</p>
+                </Link>
                 <button
                   onClick={() => removeMutation.mutate(item.watchlistId)}
                   className="text-foreground-muted hover:text-foreground"

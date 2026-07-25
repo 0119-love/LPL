@@ -60,6 +60,28 @@
     "loginButton": "로그인",
     "signupButton": "회원가입"
   },
+  "Asset": {
+    "back": "대시보드로",
+    "chartError": "차트를 불러올 수 없습니다",
+    "chartEmpty": "표시할 데이터가 없습니다",
+    "fundamentalsTitle": "핵심 재무지표",
+    "fundamentalsError": "재무지표를 불러올 수 없습니다",
+    "analystConsensus": "애널리스트 컨센서스",
+    "analysts": "명 의견",
+    "target": "목표가",
+    "marketCap": "시가총액",
+    "trailingPE": "PER (TTM)",
+    "forwardPE": "PER (예상)",
+    "eps": "EPS",
+    "dividendYield": "배당수익률",
+    "revenue": "매출액",
+    "grossMargin": "매출총이익률",
+    "ebitdaMargin": "EBITDA 마진",
+    "debtToEquity": "부채비율",
+    "currentRatio": "유동비율",
+    "beta": "베타",
+    "week52Range": "52주 범위"
+  },
   "Dashboard": {
     "tabs": {
       "market": "시세",
