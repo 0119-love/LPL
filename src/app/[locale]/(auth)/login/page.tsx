@@ -35,7 +35,7 @@ export default async function LoginPage({
               type="email"
               name="email"
               required
-              className="rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none focus:border-foreground-muted"
+              className="rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none transition-shadow focus:border-foreground-muted focus:ring-1 focus:ring-white/10"
             />
           </label>
 
@@ -46,7 +46,7 @@ export default async function LoginPage({
               name="password"
               required
               minLength={6}
-              className="rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none focus:border-foreground-muted"
+              className="rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none transition-shadow focus:border-foreground-muted focus:ring-1 focus:ring-white/10"
             />
           </label>
 

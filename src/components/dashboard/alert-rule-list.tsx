@@ -33,8 +33,8 @@ export function AlertRuleList() {
           <div
             key={rule.id}
             className={clsx(
-              "flex items-center justify-between rounded-lg border px-3 py-2 text-sm",
-              triggered ? "border-buy/40 bg-buy-soft" : "border-border-subtle",
+              "flex items-center justify-between rounded-lg border px-3 py-2 text-sm transition-colors",
+              triggered ? "border-buy/40 bg-buy-soft" : "border-border-subtle hover:border-white/20",
             )}
           >
             <div>
@@ -50,7 +50,15 @@ export function AlertRuleList() {
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <span className={triggered ? "text-xs text-buy" : "text-xs text-foreground-muted"}>
+              <span
+                className={clsx(
+                  "flex items-center gap-1.5 text-xs",
+                  triggered ? "text-buy" : "text-foreground-muted",
+                )}
+              >
+                {triggered && (
+                  <span className="h-1.5 w-1.5 rounded-full bg-buy shadow-[0_0_6px_var(--accent-buy)]" />
+                )}
                 {triggered ? t("triggered") : t("waiting")}
               </span>
               <button

@@ -24,7 +24,7 @@ export function AssetSearch() {
 
   return (
     <div className="relative">
-      <div className="flex items-center gap-2 rounded-lg border border-border-subtle bg-background px-3 py-2 focus-within:border-foreground-muted">
+      <div className="flex items-center gap-2 rounded-lg border border-border-subtle bg-background px-3 py-2 transition-shadow focus-within:border-foreground-muted focus-within:ring-1 focus-within:ring-white/10">
         <Search size={16} className="text-foreground-muted shrink-0" />
         <input
           value={raw}
