@@ -99,12 +99,21 @@ export function PortfolioTab() {
                 : `$${totalValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}`}
             </p>
             {!holdingsPending && totalCost > 0 && (
-              <span className={totalPnl >= 0 ? "text-buy text-sm" : "text-nobuy text-sm"}>
+              <span
+                className={
+                  totalPnl >= 0
+                    ? "rounded-full bg-buy-soft px-2.5 py-1 text-sm font-medium text-buy tabular-nums"
+                    : "rounded-full bg-nobuy-soft px-2.5 py-1 text-sm font-medium text-nobuy tabular-nums"
+                }
+              >
                 {totalPnl >= 0 ? "+" : ""}
                 {totalPnl.toLocaleString(undefined, { maximumFractionDigits: 0 })} (
                 {totalPnlPct >= 0 ? "+" : ""}
-                {totalPnlPct.toFixed(1)}%) · {t("todayChange")}
+                {totalPnlPct.toFixed(1)}%)
               </span>
+            )}
+            {!holdingsPending && totalCost > 0 && (
+              <span className="text-xs text-foreground-muted">{t("todayChange")}</span>
             )}
           </div>
           {snapshots && <PortfolioValueChart snapshots={snapshots} />}
@@ -131,7 +140,7 @@ export function PortfolioTab() {
               const positive = pnl >= 0;
               return (
                 <Link key={h.id} href={`/asset/${h.ticker}`}>
-                  <GlassCard className="flex flex-col gap-2 hover:opacity-90">
+                  <GlassCard className="flex flex-col gap-2 transition-colors hover:border-white/20">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium">{h.ticker}</p>
@@ -143,11 +152,17 @@ export function PortfolioTab() {
                         ${(price * h.quantity).toLocaleString(undefined, { maximumFractionDigits: 0 })}
                       </p>
                     </div>
-                    <p className={positive ? "text-buy text-xs tabular-nums" : "text-nobuy text-xs tabular-nums"}>
+                    <span
+                      className={
+                        positive
+                          ? "w-fit rounded-full bg-buy-soft px-2 py-0.5 text-xs font-medium text-buy tabular-nums"
+                          : "w-fit rounded-full bg-nobuy-soft px-2 py-0.5 text-xs font-medium text-nobuy tabular-nums"
+                      }
+                    >
                       {positive ? "+" : ""}
                       {pnl.toFixed(2)} ({positive ? "+" : ""}
                       {pnlPct.toFixed(1)}%)
-                    </p>
+                    </span>
                   </GlassCard>
                 </Link>
               );

@@ -65,7 +65,7 @@ export function FundamentalsPanel({ ticker }: { ticker: string }) {
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         {rows.map((row) => (
-          <div key={row.label} className="rounded-lg border border-border-subtle px-3 py-2">
+          <div key={row.label} className="rounded-lg border border-border-subtle bg-white/[0.02] px-3 py-2">
             <p className="text-[11px] text-foreground-muted">{row.label}</p>
             <p className="text-sm tabular-nums">{row.value}</p>
           </div>

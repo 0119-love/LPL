@@ -34,7 +34,7 @@ export function CommitteeTab() {
               const member = committeeMembers.find((c) => c.id === m.memberId);
               const pct = (m.correct / m.total) * 100;
               return (
-                <div key={m.memberId} className="rounded-lg border border-border-subtle px-3 py-2">
+                <div key={m.memberId} className="rounded-lg border border-border-subtle bg-white/[0.02] px-3 py-2">
                   <p className="text-xs text-foreground-muted">{member?.name}</p>
                   <p className="text-lg font-medium tabular-nums">{pct.toFixed(0)}%</p>
                   <p className="text-[11px] text-foreground-muted">

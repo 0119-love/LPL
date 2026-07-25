@@ -27,12 +27,18 @@ export function AssetDetailView({ ticker }: { ticker: string }) {
       <div className="mt-4 flex items-baseline justify-between">
         <h1 className="text-2xl font-semibold">{ticker}</h1>
         {!isPending && quote && (
-          <div className="text-right">
-            <p className="text-2xl tabular-nums">${quote.c.toFixed(2)}</p>
-            <p className={positive ? "text-buy text-sm tabular-nums" : "text-nobuy text-sm tabular-nums"}>
+          <div className="flex items-baseline gap-2">
+            <p className="text-2xl font-semibold tabular-nums">${quote.c.toFixed(2)}</p>
+            <span
+              className={
+                positive
+                  ? "rounded-full bg-buy-soft px-2 py-0.5 text-xs font-medium text-buy tabular-nums"
+                  : "rounded-full bg-nobuy-soft px-2 py-0.5 text-xs font-medium text-nobuy tabular-nums"
+              }
+            >
               {positive ? "+" : ""}
               {quote.dp.toFixed(2)}%
-            </p>
+            </span>
           </div>
         )}
       </div>
