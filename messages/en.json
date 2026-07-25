@@ -113,7 +113,14 @@
       "consensusNoBuy": "Committee leans No-Buy",
       "consensusSplit": "Committee is split",
       "rationale": "Rationale",
-      "voted": "of 5 voted"
+      "voted": "of 5 voted",
+      "leaderboard": "Track record by member",
+      "calls": "calls",
+      "historyLabel": "Verdict history",
+      "timelineLabel": "Verdict timeline (last 21 days)",
+      "daysAgoSuffix": "d ago",
+      "correct": "Right",
+      "incorrect": "Wrong"
     },
     "alerts": {
       "title": "Risk alerts",

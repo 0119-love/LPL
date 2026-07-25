@@ -20,8 +20,8 @@ export function VerdictBadge({
       <span
         className={clsx(
           "h-1.5 w-1.5 rounded-full",
-          verdict === "buy" && "bg-buy",
-          verdict === "no_buy" && "bg-nobuy",
+          verdict === "buy" && "bg-buy shadow-[0_0_6px_var(--accent-buy)]",
+          verdict === "no_buy" && "bg-nobuy shadow-[0_0_6px_var(--accent-nobuy)]",
           verdict === "split" && "bg-foreground-muted",
         )}
       />

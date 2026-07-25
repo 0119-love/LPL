@@ -9,7 +9,7 @@ export function GlassCard({ className, strong, ...props }: Props) {
   return (
     <div
       className={clsx(
-        "rounded-2xl p-4",
+        "rounded-[20px] p-4",
         strong ? "glass-card-strong" : "glass-card",
         className,
       )}

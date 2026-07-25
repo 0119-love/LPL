@@ -31,8 +31,12 @@
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(1200px 800px at 15% -10%, rgba(61, 220, 132, 0.05), transparent 60%),
+    radial-gradient(1000px 700px at 100% 0%, rgba(76, 154, 255, 0.05), transparent 55%),
+    var(--background);
   color: var(--foreground);
+  min-height: 100dvh;
 }
 
 .glass-card {
@@ -40,6 +44,9 @@ body {
   border: 1px solid var(--border-subtle);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+    0 12px 32px -14px rgba(0, 0, 0, 0.55);
 }
 
 .glass-card-strong {
@@ -47,6 +54,9 @@ body {
   border: 1px solid var(--border-subtle);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 20px 48px -16px rgba(0, 0, 0, 0.65);
 }
 
 ::selection {

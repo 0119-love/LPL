@@ -48,7 +48,7 @@ export function Sidebar({
             collapsed && "justify-center px-0",
           )}
         >
-          <div className="h-7 w-7 shrink-0 rounded-md bg-foreground text-background grid place-items-center text-xs font-bold">
+          <div className="h-7 w-7 shrink-0 rounded-md bg-foreground text-background grid place-items-center text-xs font-bold shadow-[0_0_16px_rgba(245,245,244,0.25)]">
             V
           </div>
           {!collapsed && (
@@ -64,14 +64,17 @@ export function Sidebar({
                 key={tab}
                 onClick={() => onSelect(tab)}
                 className={clsx(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
+                  "relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
                   collapsed && "justify-center px-0",
                   active
-                    ? "bg-white/10 text-foreground"
+                    ? "bg-white/[0.07] text-foreground shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]"
                     : "text-foreground-muted hover:text-foreground hover:bg-white/5",
                 )}
                 aria-current={active}
               >
+                {active && (
+                  <span className="absolute left-0 top-1/2 h-4 -translate-y-1/2 w-0.5 rounded-full bg-buy shadow-[0_0_6px_var(--accent-buy)]" />
+                )}
                 <Icon size={18} strokeWidth={1.75} />
                 {!collapsed && <span>{t(tab)}</span>}
               </button>

@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { Bell } from "lucide-react";
 import { Sidebar } from "./sidebar";
 import { MobileTabBar } from "./mobile-tab-bar";
 import { MarketTab } from "./tabs/market-tab";
 import { CommitteeTab } from "./tabs/committee-tab";
 import { PortfolioTab } from "./tabs/portfolio-tab";
 import { AlertsTab } from "./tabs/alerts-tab";
-import { prefetchDashboard } from "@/lib/queries/dashboard-queries";
+import { prefetchDashboard, useAlerts } from "@/lib/queries/dashboard-queries";
+import { useUser } from "@/lib/supabase/use-user";
 
 export type DashboardTab = "market" | "committee" | "portfolio" | "alerts";
 
@@ -18,6 +20,8 @@ export function DashboardShell() {
   const [collapsed, setCollapsed] = useState(false);
   const queryClient = useQueryClient();
   const t = useTranslations("Dashboard.tabs");
+  const { data: alerts } = useAlerts();
+  const { user } = useUser();
 
   // Warm the cache for every tab up front so switching never re-fetches or blocks.
   useEffect(() => {
@@ -34,14 +38,36 @@ export function DashboardShell() {
       />
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="flex items-center justify-between border-b border-border-subtle px-4 md:px-6 py-3 shrink-0">
-          <h1 className="text-sm font-medium text-foreground-muted">
+        <header className="flex items-center justify-between border-b border-border-subtle bg-background-elevated/60 backdrop-blur px-4 md:px-6 py-3.5 shrink-0">
+          <h1 className="text-base md:text-lg font-semibold tracking-tight">
             {t(activeTab)}
           </h1>
-          <span className="flex items-center gap-1.5 text-xs text-buy">
-            <span className="h-1.5 w-1.5 rounded-full bg-buy animate-pulse" />
-            LIVE
-          </span>
+
+          <div className="flex items-center gap-2">
+            <span className="hidden sm:flex items-center gap-1.5 rounded-full border border-border-subtle bg-white/[0.03] px-2.5 py-1 text-[11px] font-medium text-buy">
+              <span className="h-1.5 w-1.5 rounded-full bg-buy shadow-[0_0_6px_var(--accent-buy)] animate-pulse" />
+              LIVE
+            </span>
+
+            <button
+              onClick={() => setActiveTab("alerts")}
+              className="relative flex h-8 w-8 items-center justify-center rounded-full text-foreground-muted transition-colors hover:bg-white/5 hover:text-foreground"
+              aria-label="alerts"
+            >
+              <Bell size={17} strokeWidth={1.75} />
+              {!!alerts?.length && (
+                <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-nobuy px-1 text-[10px] font-semibold text-background">
+                  {alerts.length}
+                </span>
+              )}
+            </button>
+
+            {user && (
+              <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/10 text-xs font-medium">
+                {user.email?.[0]?.toUpperCase()}
+              </div>
+            )}
+          </div>
         </header>
 
         <main className="flex-1 overflow-y-auto px-4 md:px-6 py-5 pb-20 md:pb-5">

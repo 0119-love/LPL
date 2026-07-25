@@ -30,10 +30,13 @@ export function MobileTabBar({
             key={tab}
             onClick={() => onSelect(tab)}
             className={clsx(
-              "flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px]",
+              "relative flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px]",
               active ? "text-foreground" : "text-foreground-muted",
             )}
           >
+            {active && (
+              <span className="absolute top-0 h-0.5 w-6 rounded-full bg-buy shadow-[0_0_6px_var(--accent-buy)]" />
+            )}
             <Icon size={20} strokeWidth={1.75} />
             {t(tab)}
           </button>

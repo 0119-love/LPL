@@ -113,7 +113,14 @@
       "consensusNoBuy": "위원회 비매수 우세",
       "consensusSplit": "위원회 의견 분산",
       "rationale": "판정 근거",
-      "voted": "명 투표 완료"
+      "voted": "명 투표 완료",
+      "leaderboard": "위원별 정확도",
+      "calls": "회 판정",
+      "historyLabel": "판정 히스토리",
+      "timelineLabel": "판정 변경 타임라인 (최근 21일)",
+      "daysAgoSuffix": "일 전",
+      "correct": "적중",
+      "incorrect": "빗나감"
     },
     "alerts": {
       "title": "리스크 알림",
