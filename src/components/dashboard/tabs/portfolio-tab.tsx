@@ -1,70 +1,172 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { usePortfolio, useAssets } from "@/lib/queries/dashboard-queries";
 import { GlassCard } from "@/components/ui/glass-card";
-import { Sparkline } from "@/components/ui/sparkline";
+import { Link } from "@/i18n/navigation";
+import { useUser } from "@/lib/supabase/use-user";
+import { useQuotes } from "@/lib/queries/market-queries";
+import {
+  usePortfolioHoldings,
+  usePortfolioSnapshots,
+  usePortfolioTransactions,
+  useRecordSnapshot,
+} from "@/lib/queries/portfolio-queries";
+import { TransactionForm } from "@/components/dashboard/transaction-form";
+import { AllocationDonut } from "@/components/asset/allocation-donut";
+import { PortfolioValueChart } from "@/components/asset/portfolio-value-chart";
 
 export function PortfolioTab() {
   const t = useTranslations("Dashboard.portfolio");
-  const { data: portfolio, isPending } = usePortfolio();
-  const { data: assets } = useAssets();
+  const { user, loading: userLoading } = useUser();
+  const { data: holdings, isPending: holdingsPending } = usePortfolioHoldings();
+  const { data: transactions } = usePortfolioTransactions();
+  const { data: snapshots } = usePortfolioSnapshots();
+  const recordSnapshot = useRecordSnapshot();
+  const snapshotFired = useRef(false);
+
+  const tickers = holdings?.map((h) => h.ticker) ?? [];
+  const { data: quotes } = useQuotes(tickers);
+
+  const totalValue =
+    holdings?.reduce((sum, h) => sum + h.quantity * (quotes?.[h.ticker]?.c ?? h.avgCost), 0) ?? 0;
+  const totalCost = holdings?.reduce((sum, h) => sum + h.quantity * h.avgCost, 0) ?? 0;
+  const totalPnl = totalValue - totalCost;
+  const totalPnlPct = totalCost > 0 ? (totalPnl / totalCost) * 100 : 0;
+
+  useEffect(() => {
+    if (snapshotFired.current) return;
+    if (!holdings || !quotes) return;
+    if (holdings.length > 0 && holdings.some((h) => !quotes[h.ticker])) return;
+    snapshotFired.current = true;
+    recordSnapshot.mutate(totalValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [holdings, quotes]);
+
+  if (userLoading) return null;
+
+  if (!user) {
+    return (
+      <GlassCard className="max-w-md">
+        <p className="text-sm">{t("loginRequired")}</p>
+        <Link
+          href="/login"
+          className="mt-3 inline-block rounded-full bg-foreground px-4 py-2 text-xs font-medium text-background"
+        >
+          {t("loginCta")}
+        </Link>
+      </GlassCard>
+    );
+  }
+
+  const allocation =
+    holdings?.map((h) => ({
+      ticker: h.ticker,
+      value: h.quantity * (quotes?.[h.ticker]?.c ?? h.avgCost),
+    })) ?? [];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <GlassCard strong className="md:col-span-3">
-        <p className="text-sm text-foreground-muted">{t("totalValue")}</p>
-        <div className="mt-1 flex items-baseline gap-3">
-          <p className="text-3xl font-semibold tabular-nums">
-            {isPending
-              ? "—"
-              : `$${portfolio?.totalValue.toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}`}
-          </p>
-          {portfolio && (
-            <span
-              className={
-                portfolio.todayChangePct >= 0
-                  ? "text-buy text-sm"
-                  : "text-nobuy text-sm"
-              }
-            >
-              {portfolio.todayChangePct >= 0 ? "+" : ""}
-              {portfolio.todayChangePct.toFixed(1)}% · {t("todayChange")}
-            </span>
-          )}
-        </div>
-      </GlassCard>
+    <div className="flex flex-col gap-4">
+      <TransactionForm />
 
-      {portfolio?.holdings.map((holding) => {
-        const asset = assets?.find((a) => a.id === holding.assetId);
-        if (!asset) return null;
-        return (
-          <GlassCard key={holding.assetId} className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium">{asset.ticker}</p>
-                <p className="text-xs text-foreground-muted">
-                  {holding.quantity} shares
-                </p>
-              </div>
-              <p className="text-sm tabular-nums">
-                ${(asset.price * holding.quantity).toLocaleString(undefined, {
-                  maximumFractionDigits: 0,
-                })}
-              </p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <GlassCard strong className="md:col-span-2">
+          <p className="text-sm text-foreground-muted">{t("totalValue")}</p>
+          <div className="mt-1 flex items-baseline gap-3">
+            <p className="text-3xl font-semibold tabular-nums">
+              {holdingsPending
+                ? "—"
+                : `$${totalValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}`}
+            </p>
+            {!holdingsPending && totalCost > 0 && (
+              <span className={totalPnl >= 0 ? "text-buy text-sm" : "text-nobuy text-sm"}>
+                {totalPnl >= 0 ? "+" : ""}
+                {totalPnl.toLocaleString(undefined, { maximumFractionDigits: 0 })} (
+                {totalPnlPct >= 0 ? "+" : ""}
+                {totalPnlPct.toFixed(1)}%) · {t("todayChange")}
+              </span>
+            )}
+          </div>
+          {snapshots && <PortfolioValueChart snapshots={snapshots} />}
+        </GlassCard>
+
+        <GlassCard>
+          <p className="text-sm text-foreground-muted mb-2">{t("allocation")}</p>
+          {allocation.length > 0 ? (
+            <AllocationDonut data={allocation} />
+          ) : (
+            <p className="text-sm text-foreground-muted">{t("emptyHoldings")}</p>
+          )}
+        </GlassCard>
+      </div>
+
+      {holdings && holdings.length > 0 && (
+        <div>
+          <p className="text-sm text-foreground-muted mb-2">{t("holdings")}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {holdings.map((h) => {
+              const price = quotes?.[h.ticker]?.c ?? h.avgCost;
+              const pnl = (price - h.avgCost) * h.quantity;
+              const pnlPct = h.avgCost > 0 ? ((price - h.avgCost) / h.avgCost) * 100 : 0;
+              const positive = pnl >= 0;
+              return (
+                <Link key={h.id} href={`/asset/${h.ticker}`}>
+                  <GlassCard className="flex flex-col gap-2 hover:opacity-90">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{h.ticker}</p>
+                        <p className="text-xs text-foreground-muted">
+                          {h.quantity} {t("shares")} @ ${h.avgCost.toFixed(2)}
+                        </p>
+                      </div>
+                      <p className="text-sm tabular-nums">
+                        ${(price * h.quantity).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                      </p>
+                    </div>
+                    <p className={positive ? "text-buy text-xs tabular-nums" : "text-nobuy text-xs tabular-nums"}>
+                      {positive ? "+" : ""}
+                      {pnl.toFixed(2)} ({positive ? "+" : ""}
+                      {pnlPct.toFixed(1)}%)
+                    </p>
+                  </GlassCard>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {transactions && transactions.length > 0 && (
+        <div>
+          <p className="text-sm text-foreground-muted mb-2">{t("history")}</p>
+          <GlassCard className="!p-0 overflow-hidden">
+            <div className="divide-y divide-border-subtle">
+              {transactions.map((tx) => (
+                <div key={tx.id} className="flex items-center justify-between px-4 py-2.5 text-sm">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={
+                        tx.side === "buy"
+                          ? "rounded-full bg-buy-soft px-2 py-0.5 text-[11px] text-buy"
+                          : "rounded-full bg-nobuy-soft px-2 py-0.5 text-[11px] text-nobuy"
+                      }
+                    >
+                      {tx.side === "buy" ? t("buy") : t("sell")}
+                    </span>
+                    <span className="font-medium">{tx.ticker}</span>
+                    <span className="text-xs text-foreground-muted">
+                      {tx.quantity} @ ${tx.price.toFixed(2)}
+                    </span>
+                  </div>
+                  <span className="text-xs text-foreground-muted">
+                    {new Date(tx.executedAt).toLocaleDateString()}
+                  </span>
+                </div>
+              ))}
             </div>
-            <Sparkline
-              data={asset.sparkline}
-              positive={asset.changePct >= 0}
-              width={220}
-              height={44}
-            />
           </GlassCard>
-        );
-      })}
+        </div>
+      )}
     </div>
   );
 }

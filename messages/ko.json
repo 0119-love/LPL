@@ -125,7 +125,20 @@
     "portfolio": {
       "title": "포트폴리오",
       "totalValue": "총 평가액",
-      "todayChange": "오늘 변동"
+      "todayChange": "손익",
+      "loginRequired": "로그인하고 포트폴리오를 관리해보세요.",
+      "loginCta": "로그인",
+      "addTransaction": "거래 기록 추가",
+      "buy": "매수",
+      "sell": "매도",
+      "quantity": "수량",
+      "price": "가격",
+      "record": "기록",
+      "allocation": "종목별 비중",
+      "emptyHoldings": "보유 종목이 없습니다",
+      "holdings": "보유 종목",
+      "shares": "주",
+      "history": "거래 내역"
     },
     "assetDetail": {
       "status": "상태",

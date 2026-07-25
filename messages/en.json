@@ -125,7 +125,20 @@
     "portfolio": {
       "title": "Portfolio",
       "totalValue": "Total value",
-      "todayChange": "Today's change"
+      "todayChange": "P&L",
+      "loginRequired": "Log in to track your portfolio.",
+      "loginCta": "Log in",
+      "addTransaction": "Record a trade",
+      "buy": "Buy",
+      "sell": "Sell",
+      "quantity": "Quantity",
+      "price": "Price",
+      "record": "Record",
+      "allocation": "Allocation",
+      "emptyHoldings": "No holdings yet",
+      "holdings": "Holdings",
+      "shares": "sh",
+      "history": "Transaction history"
     },
     "assetDetail": {
       "status": "Status",
