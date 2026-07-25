@@ -10,6 +10,7 @@ import { GlassCard } from "@/components/ui/glass-card";
 export function TransactionForm() {
   const t = useTranslations("Dashboard.portfolio");
   const tm = useTranslations("Dashboard.market");
+  const tc = useTranslations("Common");
   const [raw, setRaw] = useState("");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -46,7 +47,8 @@ export function TransactionForm() {
             onFocus={() => setOpen(true)}
             onBlur={() => setTimeout(() => setOpen(false), 150)}
             placeholder={tm("searchPlaceholder")}
-            className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none placeholder:text-foreground-muted"
+            aria-label={tm("searchPlaceholder")}
+            className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none focus:border-foreground-muted placeholder:text-foreground-muted"
           />
           {open && query && !selected && (
             <div className="absolute z-10 mt-1.5 w-full max-h-56 overflow-y-auto rounded-lg border border-border-subtle bg-background-elevated shadow-xl">
@@ -97,7 +99,8 @@ export function TransactionForm() {
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
             placeholder={t("quantity")}
-            className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none placeholder:text-foreground-muted"
+            aria-label={t("quantity")}
+            className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none focus:border-foreground-muted placeholder:text-foreground-muted"
           />
         </div>
 
@@ -108,7 +111,8 @@ export function TransactionForm() {
           value={price}
           onChange={(e) => setPrice(e.target.value)}
           placeholder={t("price")}
-          className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none placeholder:text-foreground-muted md:col-span-2"
+          aria-label={t("price")}
+          className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none focus:border-foreground-muted placeholder:text-foreground-muted md:col-span-2"
         />
 
         <button
@@ -136,6 +140,10 @@ export function TransactionForm() {
         >
           {t("record")}
         </button>
+
+        {mutation.isError && (
+          <p className="text-xs text-nobuy md:col-span-4">{tc("errorGeneric")}</p>
+        )}
       </div>
     </GlassCard>
   );

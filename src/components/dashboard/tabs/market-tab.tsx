@@ -14,8 +14,14 @@ import {
 
 export function MarketTab() {
   const t = useTranslations("Dashboard.market");
+  const tc = useTranslations("Common");
   const { user, loading: userLoading } = useUser();
-  const { data: watchlist, isPending: watchlistPending } = useWatchlist();
+  const {
+    data: watchlist,
+    isPending: watchlistPending,
+    isError: watchlistError,
+    refetch: refetchWatchlist,
+  } = useWatchlist();
   const tickers = watchlist?.map((item) => item.ticker) ?? [];
   const { data: quotes, isPending: quotesPending } = useQuotes(tickers);
   const removeMutation = useRemoveFromWatchlist();
@@ -46,7 +52,19 @@ export function MarketTab() {
         <p className="text-sm text-foreground-muted">…</p>
       )}
 
-      {!watchlistPending && watchlist?.length === 0 && (
+      {watchlistError && (
+        <GlassCard className="max-w-md">
+          <p className="text-sm text-nobuy">{tc("errorGeneric")}</p>
+          <button
+            onClick={() => refetchWatchlist()}
+            className="mt-2 text-xs text-foreground-muted underline hover:text-foreground"
+          >
+            {tc("retry")}
+          </button>
+        </GlassCard>
+      )}
+
+      {!watchlistPending && !watchlistError && watchlist?.length === 0 && (
         <GlassCard className="max-w-md">
           <p className="text-sm text-foreground-muted">{t("emptyWatchlist")}</p>
         </GlassCard>
@@ -67,7 +85,7 @@ export function MarketTab() {
                 <button
                   onClick={() => removeMutation.mutate(item.watchlistId)}
                   className="text-foreground-muted hover:text-foreground"
-                  aria-label="remove"
+                  aria-label={t("remove", { ticker: item.ticker })}
                 >
                   <X size={16} />
                 </button>

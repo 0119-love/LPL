@@ -18,8 +18,14 @@ import { PortfolioValueChart } from "@/components/asset/portfolio-value-chart";
 
 export function PortfolioTab() {
   const t = useTranslations("Dashboard.portfolio");
+  const tc = useTranslations("Common");
   const { user, loading: userLoading } = useUser();
-  const { data: holdings, isPending: holdingsPending } = usePortfolioHoldings();
+  const {
+    data: holdings,
+    isPending: holdingsPending,
+    isError: holdingsError,
+    refetch: refetchHoldings,
+  } = usePortfolioHoldings();
   const { data: transactions } = usePortfolioTransactions();
   const { data: snapshots } = usePortfolioSnapshots();
   const recordSnapshot = useRecordSnapshot();
@@ -64,6 +70,20 @@ export function PortfolioTab() {
       ticker: h.ticker,
       value: h.quantity * (quotes?.[h.ticker]?.c ?? h.avgCost),
     })) ?? [];
+
+  if (holdingsError) {
+    return (
+      <GlassCard className="max-w-md">
+        <p className="text-sm text-nobuy">{tc("errorGeneric")}</p>
+        <button
+          onClick={() => refetchHoldings()}
+          className="mt-2 text-xs text-foreground-muted underline hover:text-foreground"
+        >
+          {tc("retry")}
+        </button>
+      </GlassCard>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -136,9 +156,14 @@ export function PortfolioTab() {
         </div>
       )}
 
-      {transactions && transactions.length > 0 && (
+      {transactions && (
         <div>
           <p className="text-sm text-foreground-muted mb-2">{t("history")}</p>
+          {transactions.length === 0 ? (
+            <GlassCard>
+              <p className="text-sm text-foreground-muted">{t("emptyTransactions")}</p>
+            </GlassCard>
+          ) : (
           <GlassCard className="!p-0 overflow-hidden">
             <div className="divide-y divide-border-subtle">
               {transactions.map((tx) => (
@@ -165,6 +190,7 @@ export function PortfolioTab() {
               ))}
             </div>
           </GlassCard>
+          )}
         </div>
       )}
     </div>

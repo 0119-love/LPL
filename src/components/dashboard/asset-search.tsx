@@ -24,7 +24,7 @@ export function AssetSearch() {
 
   return (
     <div className="relative">
-      <div className="flex items-center gap-2 rounded-lg border border-border-subtle bg-background px-3 py-2">
+      <div className="flex items-center gap-2 rounded-lg border border-border-subtle bg-background px-3 py-2 focus-within:border-foreground-muted">
         <Search size={16} className="text-foreground-muted shrink-0" />
         <input
           value={raw}
@@ -35,6 +35,7 @@ export function AssetSearch() {
           onFocus={() => setOpen(true)}
           onBlur={() => setTimeout(() => setOpen(false), 150)}
           placeholder={t("searchPlaceholder")}
+          aria-label={t("searchPlaceholder")}
           className="w-full bg-transparent text-sm outline-none placeholder:text-foreground-muted"
         />
       </div>
@@ -71,6 +72,9 @@ export function AssetSearch() {
             </button>
           ))}
         </div>
+      )}
+      {addMutation.isError && (
+        <p className="mt-1 text-xs text-nobuy">{t("addFailed")}</p>
       )}
     </div>
   );

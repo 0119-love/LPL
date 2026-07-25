@@ -1,7 +1,9 @@
 {
   "Common": {
     "brand": "Verdict",
-    "brandTag": "The 5-Member Investment Committee"
+    "brandTag": "The 5-Member Investment Committee",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "retry": "Retry"
   },
   "Nav": {
     "features": "Features",
@@ -103,7 +105,9 @@
       "loginRequired": "Log in to add symbols to your watchlist.",
       "loginCta": "Log in",
       "emptyWatchlist": "No symbols yet. Search above to add your first one.",
-      "quoteUnavailable": "Quote unavailable"
+      "quoteUnavailable": "Quote unavailable",
+      "remove": "Remove {ticker} from watchlist",
+      "addFailed": "Couldn't add that symbol. Please try again."
     },
     "committee": {
       "title": "Committee verdicts",
@@ -165,7 +169,8 @@
       "emptyHoldings": "No holdings yet",
       "holdings": "Holdings",
       "shares": "sh",
-      "history": "Transaction history"
+      "history": "Transaction history",
+      "emptyTransactions": "No trades recorded yet."
     },
     "assetDetail": {
       "status": "Status",

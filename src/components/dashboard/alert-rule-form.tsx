@@ -10,6 +10,7 @@ import type { AlertCondition } from "@/lib/supabase/alert-rules";
 export function AlertRuleForm() {
   const t = useTranslations("Dashboard.alerts");
   const tm = useTranslations("Dashboard.market");
+  const tc = useTranslations("Common");
   const [raw, setRaw] = useState("");
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
@@ -41,7 +42,8 @@ export function AlertRuleForm() {
           onFocus={() => setOpen(true)}
           onBlur={() => setTimeout(() => setOpen(false), 150)}
           placeholder={tm("searchPlaceholder")}
-          className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none placeholder:text-foreground-muted"
+          aria-label={tm("searchPlaceholder")}
+          className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none focus:border-foreground-muted placeholder:text-foreground-muted"
         />
         {open && query && !selected && (
           <div className="absolute z-10 mt-1.5 w-full max-h-56 overflow-y-auto rounded-lg border border-border-subtle bg-background-elevated shadow-xl">
@@ -98,7 +100,8 @@ export function AlertRuleForm() {
           value={threshold}
           onChange={(e) => setThreshold(e.target.value)}
           placeholder={t("threshold")}
-          className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none placeholder:text-foreground-muted"
+          aria-label={t("threshold")}
+          className="w-full rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none focus:border-foreground-muted placeholder:text-foreground-muted"
         />
       </div>
 
@@ -120,6 +123,10 @@ export function AlertRuleForm() {
       >
         {t("createRule")}
       </button>
+
+      {mutation.isError && (
+        <p className="text-xs text-nobuy md:col-span-4">{tc("errorGeneric")}</p>
+      )}
     </div>
   );
 }

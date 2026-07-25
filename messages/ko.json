@@ -1,7 +1,9 @@
 {
   "Common": {
     "brand": "Verdict",
-    "brandTag": "5인 투자 위원회"
+    "brandTag": "5인 투자 위원회",
+    "errorGeneric": "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
+    "retry": "다시 시도"
   },
   "Nav": {
     "features": "기능",
@@ -103,7 +105,9 @@
       "loginRequired": "로그인하고 관심 종목을 추가해보세요.",
       "loginCta": "로그인",
       "emptyWatchlist": "아직 추가한 종목이 없습니다. 위 검색창에서 종목을 찾아 추가해보세요.",
-      "quoteUnavailable": "시세를 불러올 수 없습니다"
+      "quoteUnavailable": "시세를 불러올 수 없습니다",
+      "remove": "{ticker} 관심종목에서 삭제",
+      "addFailed": "종목을 추가하지 못했습니다. 다시 시도해주세요."
     },
     "committee": {
       "title": "5인 위원회 판정",
@@ -165,7 +169,8 @@
       "emptyHoldings": "보유 종목이 없습니다",
       "holdings": "보유 종목",
       "shares": "주",
-      "history": "거래 내역"
+      "history": "거래 내역",
+      "emptyTransactions": "아직 거래 기록이 없습니다."
     },
     "assetDetail": {
       "status": "상태",
