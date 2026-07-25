@@ -1,4 +1,5 @@
 import { createClient } from "./client";
+import { getOrCreateAssetId } from "./get-or-create-asset";
 
 export type AlertCondition = "price_above" | "price_below";
 
@@ -44,16 +45,11 @@ export async function createAlertRule(input: {
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) throw new Error("not_authenticated");
 
-  const { data: asset, error: assetError } = await supabase
-    .from("assets")
-    .upsert({ ticker: input.ticker, name: input.name }, { onConflict: "ticker" })
-    .select("id")
-    .single();
-  if (assetError) throw assetError;
+  const assetId = await getOrCreateAssetId(supabase, input.ticker, input.name);
 
   const { error } = await supabase.from("alert_rules").insert({
     user_id: userData.user.id,
-    asset_id: asset.id,
+    asset_id: assetId,
     condition: input.condition,
     threshold: input.threshold,
   });

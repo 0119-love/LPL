@@ -1,4 +1,5 @@
 import { createClient } from "./client";
+import { getOrCreateAssetId } from "./get-or-create-asset";
 
 export type Holding = {
   id: string;
@@ -84,16 +85,11 @@ export async function recordTransaction(input: {
   if (!userData.user) throw new Error("not_authenticated");
   const userId = userData.user.id;
 
-  const { data: asset, error: assetError } = await supabase
-    .from("assets")
-    .upsert({ ticker: input.ticker, name: input.name }, { onConflict: "ticker" })
-    .select("id")
-    .single();
-  if (assetError) throw assetError;
+  const assetId = await getOrCreateAssetId(supabase, input.ticker, input.name);
 
   const { error: txError } = await supabase.from("portfolio_transactions").insert({
     user_id: userId,
-    asset_id: asset.id,
+    asset_id: assetId,
     side: input.side,
     quantity: input.quantity,
     price: input.price,
@@ -104,7 +100,7 @@ export async function recordTransaction(input: {
     .from("portfolio_holdings")
     .select("quantity, avg_cost")
     .eq("user_id", userId)
-    .eq("asset_id", asset.id)
+    .eq("asset_id", assetId)
     .maybeSingle();
 
   const prevQty = existing ? Number(existing.quantity) : 0;
@@ -116,7 +112,7 @@ export async function recordTransaction(input: {
     const { error } = await supabase
       .from("portfolio_holdings")
       .upsert(
-        { user_id: userId, asset_id: asset.id, quantity: newQty, avg_cost: newAvg, updated_at: new Date().toISOString() },
+        { user_id: userId, asset_id: assetId, quantity: newQty, avg_cost: newAvg, updated_at: new Date().toISOString() },
         { onConflict: "user_id,asset_id" },
       );
     if (error) throw error;
@@ -127,12 +123,12 @@ export async function recordTransaction(input: {
         .from("portfolio_holdings")
         .delete()
         .eq("user_id", userId)
-        .eq("asset_id", asset.id);
+        .eq("asset_id", assetId);
     } else {
       const { error } = await supabase
         .from("portfolio_holdings")
         .upsert(
-          { user_id: userId, asset_id: asset.id, quantity: newQty, avg_cost: prevAvg, updated_at: new Date().toISOString() },
+          { user_id: userId, asset_id: assetId, quantity: newQty, avg_cost: prevAvg, updated_at: new Date().toISOString() },
           { onConflict: "user_id,asset_id" },
         );
       if (error) throw error;

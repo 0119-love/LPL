@@ -1,4 +1,5 @@
 import { createClient } from "./client";
+import { getOrCreateAssetId } from "./get-or-create-asset";
 
 export type WatchlistItem = {
   watchlistId: string;
@@ -33,16 +34,11 @@ export async function addToWatchlist(ticker: string, name: string) {
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) throw new Error("not_authenticated");
 
-  const { data: asset, error: upsertError } = await supabase
-    .from("assets")
-    .upsert({ ticker, name }, { onConflict: "ticker" })
-    .select("id")
-    .single();
-  if (upsertError) throw upsertError;
+  const assetId = await getOrCreateAssetId(supabase, ticker, name);
 
   const { error: watchError } = await supabase
     .from("watchlist")
-    .insert({ user_id: userData.user.id, asset_id: asset.id });
+    .insert({ user_id: userData.user.id, asset_id: assetId });
   if (watchError) throw watchError;
 }
 
