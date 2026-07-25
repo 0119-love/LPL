@@ -76,7 +76,10 @@ export function MarketTab() {
           const positive = (quote?.dp ?? 0) >= 0;
 
           return (
-            <GlassCard key={item.watchlistId} className="flex flex-col gap-3">
+            <GlassCard
+              key={item.watchlistId}
+              className="flex flex-col gap-3 transition-colors hover:border-white/20"
+            >
               <div className="flex items-start justify-between">
                 <Link href={`/asset/${item.ticker}`} className="min-w-0 hover:opacity-80">
                   <p className="font-medium">{item.ticker}</p>
@@ -94,21 +97,35 @@ export function MarketTab() {
               {quotesPending && !quote ? (
                 <p className="text-sm text-foreground-muted">…</p>
               ) : quote ? (
-                <div className="flex items-baseline justify-between">
-                  <p className="text-lg tabular-nums">
-                    ${quote.c.toFixed(2)}
-                  </p>
-                  <p
-                    className={
-                      positive
-                        ? "text-buy text-sm tabular-nums"
-                        : "text-nobuy text-sm tabular-nums"
-                    }
-                  >
-                    {positive ? "+" : ""}
-                    {quote.dp.toFixed(2)}%
-                  </p>
-                </div>
+                <>
+                  <div className="flex items-baseline justify-between">
+                    <p className="text-2xl font-semibold tabular-nums">
+                      ${quote.c.toFixed(2)}
+                    </p>
+                    <span
+                      className={
+                        positive
+                          ? "rounded-full bg-buy-soft px-2 py-0.5 text-xs font-medium text-buy tabular-nums"
+                          : "rounded-full bg-nobuy-soft px-2 py-0.5 text-xs font-medium text-nobuy tabular-nums"
+                      }
+                    >
+                      {positive ? "+" : ""}
+                      {quote.dp.toFixed(2)}%
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-border-subtle pt-2.5 text-[11px] text-foreground-muted">
+                    <span>
+                      H <span className="tabular-nums text-foreground">{quote.h.toFixed(2)}</span>
+                    </span>
+                    <span>
+                      L <span className="tabular-nums text-foreground">{quote.l.toFixed(2)}</span>
+                    </span>
+                    <span>
+                      {t("todaySuffix")}{" "}
+                      <span className="tabular-nums text-foreground">{quote.pc.toFixed(2)}</span>
+                    </span>
+                  </div>
+                </>
               ) : (
                 <p className="text-sm text-foreground-muted">{t("quoteUnavailable")}</p>
               )}
