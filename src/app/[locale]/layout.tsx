@@ -22,6 +22,8 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://lpl-icgi.vercel.app";
+
 export async function generateMetadata({
   params,
 }: {
@@ -29,10 +31,29 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Common" });
+  const title = `${t("brand")} — ${t("brandTag")}`;
 
   return {
-    title: `${t("brand")} — ${t("brandTag")}`,
+    metadataBase: new URL(SITE_URL),
+    title,
     description: t("brandTag"),
+    alternates: {
+      canonical: `/${locale}`,
+      languages: { ko: "/ko", en: "/en" },
+    },
+    openGraph: {
+      title,
+      description: t("brandTag"),
+      url: `/${locale}`,
+      siteName: t("brand"),
+      locale: locale === "ko" ? "ko_KR" : "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: t("brandTag"),
+    },
   };
 }
 
