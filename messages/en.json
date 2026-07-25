@@ -75,7 +75,13 @@
       "title": "Live market",
       "volumeCard": "Live volume",
       "todaySuffix": "today",
-      "topAssets": "Top assets"
+      "topAssets": "Top assets",
+      "searchPlaceholder": "Search a symbol (e.g. AAPL, Apple)",
+      "noResults": "No results",
+      "loginRequired": "Log in to add symbols to your watchlist.",
+      "loginCta": "Log in",
+      "emptyWatchlist": "No symbols yet. Search above to add your first one.",
+      "quoteUnavailable": "Quote unavailable"
     },
     "committee": {
       "title": "Committee verdicts",
