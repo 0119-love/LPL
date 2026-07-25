@@ -12,15 +12,26 @@ import { PortfolioTab } from "./tabs/portfolio-tab";
 import { AlertsTab } from "./tabs/alerts-tab";
 import { prefetchDashboard, useAlerts } from "@/lib/queries/dashboard-queries";
 import { useUser } from "@/lib/supabase/use-user";
+import { ReadAlertsProvider, useReadAlerts } from "@/lib/use-read-alerts";
 
 export type DashboardTab = "market" | "committee" | "portfolio" | "alerts";
 
 export function DashboardShell() {
+  return (
+    <ReadAlertsProvider>
+      <DashboardShellInner />
+    </ReadAlertsProvider>
+  );
+}
+
+function DashboardShellInner() {
   const [activeTab, setActiveTab] = useState<DashboardTab>("market");
   const [collapsed, setCollapsed] = useState(false);
   const queryClient = useQueryClient();
   const t = useTranslations("Dashboard.tabs");
   const { data: alerts } = useAlerts();
+  const { readIds } = useReadAlerts();
+  const unreadCount = alerts?.filter((a) => !readIds.has(a.id)).length ?? 0;
   const { user } = useUser();
 
   // Warm the cache for every tab up front so switching never re-fetches or blocks.
@@ -55,9 +66,9 @@ export function DashboardShell() {
               aria-label="alerts"
             >
               <Bell size={17} strokeWidth={1.75} />
-              {!!alerts?.length && (
+              {unreadCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-nobuy px-1 text-[10px] font-semibold text-background">
-                  {alerts.length}
+                  {unreadCount}
                 </span>
               )}
             </button>
