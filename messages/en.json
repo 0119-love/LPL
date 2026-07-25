@@ -1,0 +1,108 @@
+{
+  "Common": {
+    "brand": "Verdict",
+    "brandTag": "The 5-Member Investment Committee"
+  },
+  "Nav": {
+    "features": "Features",
+    "committee": "The Committee",
+    "pricing": "Pricing",
+    "login": "Log in",
+    "getStarted": "Get started",
+    "dashboard": "Dashboard"
+  },
+  "Hero": {
+    "eyebrow": "Bloomberg-grade data + human judgment",
+    "title": "5 experts vote first.\nBuy, or don't.",
+    "subtitle": "Live prices and indicators are just the baseline. Verdict layers a 5-member expert committee's buy / no-buy call on top, so the decision buried in the data gets made for you.",
+    "ctaPrimary": "See today's verdicts free",
+    "ctaSecondary": "Explore the live demo",
+    "statVolume": "Assets ruled on today",
+    "statMembers": "Committee members",
+    "statAccuracy": "90-day consensus accuracy"
+  },
+  "Features": {
+    "title": "How it works",
+    "subtitle": "Prices, committee verdicts, and risk alerts layered on a single screen — everything you need to decide.",
+    "items": [
+      {
+        "title": "5-member verdicts",
+        "desc": "Five committee members each vote Buy or No-Buy with reasoning attached. A consensus badge shows the call at a glance."
+      },
+      {
+        "title": "Live price & volume",
+        "desc": "Bloomberg-style live charts for price, volume, and percentage moves, updated in real time."
+      },
+      {
+        "title": "Risk alerts",
+        "desc": "Unusual volume, sharp drops, and sudden shifts in committee sentiment land in your alerts panel instantly."
+      }
+    ]
+  },
+  "DashboardPreview": {
+    "label": "Live committee dashboard",
+    "liveBadge": "LIVE"
+  },
+  "CTA": {
+    "title": "See the next verdict, right now.",
+    "subtitle": "Sign up and see the committee's latest calls immediately.",
+    "button": "Start for free"
+  },
+  "Footer": {
+    "tagline": "The 5-member investment verdict platform",
+    "rights": "All rights reserved."
+  },
+  "Auth": {
+    "title": "Log in or sign up",
+    "subtitle": "Sign up with your email to see today's committee verdicts.",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "loginButton": "Log in",
+    "signupButton": "Sign up"
+  },
+  "Dashboard": {
+    "tabs": {
+      "market": "Market",
+      "committee": "Committee",
+      "portfolio": "Portfolio",
+      "alerts": "Alerts"
+    },
+    "sidebar": {
+      "collapse": "Collapse",
+      "expand": "Expand"
+    },
+    "market": {
+      "title": "Live market",
+      "volumeCard": "Live volume",
+      "todaySuffix": "today",
+      "topAssets": "Top assets"
+    },
+    "committee": {
+      "title": "Committee verdicts",
+      "buy": "Buy",
+      "noBuy": "No-Buy",
+      "consensusBuy": "Committee leans Buy",
+      "consensusNoBuy": "Committee leans No-Buy",
+      "consensusSplit": "Committee is split",
+      "rationale": "Rationale",
+      "voted": "of 5 voted"
+    },
+    "alerts": {
+      "title": "Risk alerts",
+      "capacityIssue": "Unusual activity detected",
+      "scheduleDeviation": "Committee sentiment shift",
+      "minutesAgo": "min ago",
+      "recommend": "Recommended action"
+    },
+    "portfolio": {
+      "title": "Portfolio",
+      "totalValue": "Total value",
+      "todayChange": "Today's change"
+    },
+    "assetDetail": {
+      "status": "Status",
+      "online": "Tracking",
+      "lastUpdated": "Last updated"
+    }
+  }
+}

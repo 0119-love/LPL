@@ -1,0 +1,108 @@
+{
+  "Common": {
+    "brand": "Verdict",
+    "brandTag": "5인 투자 위원회"
+  },
+  "Nav": {
+    "features": "기능",
+    "committee": "위원회 소개",
+    "pricing": "요금제",
+    "login": "로그인",
+    "getStarted": "시작하기",
+    "dashboard": "대시보드"
+  },
+  "Hero": {
+    "eyebrow": "블룸버그급 데이터 + 사람의 판단",
+    "title": "5인 위원회가 먼저 판정합니다.\n사도 되는지, 안 되는지.",
+    "subtitle": "실시간 시세와 지표는 기본입니다. Verdict는 여기에 5인 전문가 위원회의 매수/비매수 판정을 더해, 데이터에 묻혀 있던 결정을 대신 내려드립니다.",
+    "ctaPrimary": "무료로 위원회 판정 보기",
+    "ctaSecondary": "라이브 데모 둘러보기",
+    "statVolume": "오늘 판정된 자산",
+    "statMembers": "위원회 인원",
+    "statAccuracy": "지난 90일 합의 적중률"
+  },
+  "Features": {
+    "title": "어떻게 작동하나요",
+    "subtitle": "화면 하나에 시세, 위원회 판정, 리스크 알림까지 — 판단에 필요한 모든 레이어를 겹쳐서 보여줍니다.",
+    "items": [
+      {
+        "title": "5인 위원회 판정",
+        "desc": "매수/비매수(Buy · No-Buy)를 다섯 명의 위원이 각자 근거와 함께 투표합니다. 다수결 배지로 한눈에 확인하세요."
+      },
+      {
+        "title": "실시간 시세 & 거래량",
+        "desc": "블룸버그 스타일의 라이브 차트로 가격, 거래량, 변동률을 즉시 확인합니다."
+      },
+      {
+        "title": "리스크 알림",
+        "desc": "이상 거래량, 급락, 위원회 의견 급변 등을 즉시 알림 패널로 받아보세요."
+      }
+    ]
+  },
+  "DashboardPreview": {
+    "label": "실시간 위원회 대시보드",
+    "liveBadge": "LIVE"
+  },
+  "CTA": {
+    "title": "다음 판정, 지금 확인하세요.",
+    "subtitle": "가입 후 바로 5인 위원회의 최신 판정을 확인할 수 있습니다.",
+    "button": "무료로 시작하기"
+  },
+  "Footer": {
+    "tagline": "5인 위원회의 투자 판정 플랫폼",
+    "rights": "All rights reserved."
+  },
+  "Auth": {
+    "title": "로그인 또는 가입",
+    "subtitle": "이메일로 가입하면 바로 위원회 판정을 볼 수 있어요.",
+    "emailLabel": "이메일",
+    "passwordLabel": "비밀번호",
+    "loginButton": "로그인",
+    "signupButton": "회원가입"
+  },
+  "Dashboard": {
+    "tabs": {
+      "market": "시세",
+      "committee": "위원회",
+      "portfolio": "포트폴리오",
+      "alerts": "알림"
+    },
+    "sidebar": {
+      "collapse": "접기",
+      "expand": "펼치기"
+    },
+    "market": {
+      "title": "실시간 시세",
+      "volumeCard": "실시간 거래량",
+      "todaySuffix": "오늘",
+      "topAssets": "주요 종목"
+    },
+    "committee": {
+      "title": "5인 위원회 판정",
+      "buy": "매수",
+      "noBuy": "비매수",
+      "consensusBuy": "위원회 매수 우세",
+      "consensusNoBuy": "위원회 비매수 우세",
+      "consensusSplit": "위원회 의견 분산",
+      "rationale": "판정 근거",
+      "voted": "명 투표 완료"
+    },
+    "alerts": {
+      "title": "리스크 알림",
+      "capacityIssue": "이상 거래 감지",
+      "scheduleDeviation": "위원회 의견 급변",
+      "minutesAgo": "분 전",
+      "recommend": "권장 조치"
+    },
+    "portfolio": {
+      "title": "포트폴리오",
+      "totalValue": "총 평가액",
+      "todayChange": "오늘 변동"
+    },
+    "assetDetail": {
+      "status": "상태",
+      "online": "추적 중",
+      "lastUpdated": "마지막 업데이트"
+    }
+  }
+}
