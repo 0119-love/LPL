@@ -13,14 +13,19 @@ import { AlertsTab } from "./tabs/alerts-tab";
 import { prefetchDashboard, useAlerts } from "@/lib/queries/dashboard-queries";
 import { useUser } from "@/lib/supabase/use-user";
 import { ReadAlertsProvider, useReadAlerts } from "@/lib/use-read-alerts";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
+import { TabErrorFallback } from "./tab-error-fallback";
+import { DashboardErrorFallback } from "./dashboard-error-fallback";
 
 export type DashboardTab = "market" | "committee" | "portfolio" | "alerts";
 
 export function DashboardShell() {
   return (
-    <ReadAlertsProvider>
-      <DashboardShellInner />
-    </ReadAlertsProvider>
+    <ErrorBoundary fallback={<DashboardErrorFallback />}>
+      <ReadAlertsProvider>
+        <DashboardShellInner />
+      </ReadAlertsProvider>
+    </ErrorBoundary>
   );
 }
 
@@ -82,12 +87,14 @@ function DashboardShellInner() {
         </header>
 
         <main className="flex-1 overflow-y-auto px-4 md:px-6 py-5 pb-20 md:pb-5">
-          <div key={activeTab} className="animate-[fadeIn_120ms_ease-out]">
-            {activeTab === "market" && <MarketTab />}
-            {activeTab === "committee" && <CommitteeTab />}
-            {activeTab === "portfolio" && <PortfolioTab />}
-            {activeTab === "alerts" && <AlertsTab />}
-          </div>
+          <ErrorBoundary key={activeTab} fallback={<TabErrorFallback />}>
+            <div className="animate-[fadeIn_120ms_ease-out]">
+              {activeTab === "market" && <MarketTab />}
+              {activeTab === "committee" && <CommitteeTab />}
+              {activeTab === "portfolio" && <PortfolioTab />}
+              {activeTab === "alerts" && <AlertsTab />}
+            </div>
+          </ErrorBoundary>
         </main>
       </div>
 

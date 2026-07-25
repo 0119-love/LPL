@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCandles, type ChartRange } from "@/lib/yahoo/client";
+import { checkRateLimit, clientKeyFromHeaders } from "@/lib/rate-limit";
 
 const VALID_RANGES: ChartRange[] = ["1D", "1W", "1M", "3M", "1Y"];
 
 export async function GET(request: NextRequest) {
+  if (!checkRateLimit(clientKeyFromHeaders(request.headers))) {
+    return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+  }
+
   const symbol = request.nextUrl.searchParams.get("symbol");
   const range = request.nextUrl.searchParams.get("range") as ChartRange | null;
 
