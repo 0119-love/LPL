@@ -4,13 +4,18 @@ import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { GlassCard } from "@/components/ui/glass-card";
-import { useQuotes } from "@/lib/queries/market-queries";
+import { useQuotes, useSymbolSearch } from "@/lib/queries/market-queries";
 import { PriceChart } from "./price-chart";
 import { FundamentalsPanel } from "./fundamentals-panel";
+import { AssetCommitteePanel } from "./asset-committee-panel";
 
 export function AssetDetailView({ ticker }: { ticker: string }) {
   const t = useTranslations("Asset");
+  const tc = useTranslations("Dashboard.committee");
   const { data: quotes, isPending } = useQuotes([ticker]);
+  const { data: searchResult } = useSymbolSearch(ticker);
+  const name =
+    searchResult?.result.find((r) => r.symbol === ticker)?.description ?? ticker;
   const quote = quotes?.[ticker];
   const positive = (quote?.dp ?? 0) >= 0;
 
@@ -46,6 +51,13 @@ export function AssetDetailView({ ticker }: { ticker: string }) {
       <GlassCard strong className="mt-6">
         <PriceChart ticker={ticker} />
       </GlassCard>
+
+      <div className="mt-6">
+        <h2 className="mb-3 text-sm font-medium text-foreground-muted">
+          {tc("title")}
+        </h2>
+        <AssetCommitteePanel ticker={ticker} name={name} />
+      </div>
 
       <div className="mt-6">
         <h2 className="mb-3 text-sm font-medium text-foreground-muted">
