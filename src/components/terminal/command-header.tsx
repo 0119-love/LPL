@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bell, ChevronDown } from "lucide-react";
+import { Bell } from "lucide-react";
 import { useUser } from "@/lib/supabase/use-user";
 import { useAlertRuleCount } from "@/lib/queries/terminal-queries";
 import { Header } from "./ui/header";
 import { StatusIndicator } from "./ui/status-indicator";
 import { CommandSearch } from "./command-search";
+import { CommandUserMenu } from "./command-user-menu";
 
 function greetingFor(hour: number) {
   if (hour < 12) return "Good Morning";
@@ -60,16 +61,7 @@ export function CommandHeader() {
             )}
           </button>
 
-          <button className="flex items-center gap-2 rounded-md border border-[var(--term-border)] bg-white/[0.03] py-1 pl-1 pr-2 hover:bg-white/[0.05] transition-colors">
-            <div className="grid h-6 w-6 shrink-0 place-items-center rounded bg-[var(--term-buy)]/15 text-[11px] font-medium text-[var(--term-buy)]">
-              {capitalized[0]}
-            </div>
-            <span className="hidden sm:flex flex-col items-start leading-none">
-              <span className="text-[12px] font-medium">{capitalized}</span>
-              <span className="mt-0.5 text-[9.5px] text-[var(--term-text-dim)]">Pro Plan</span>
-            </span>
-            <ChevronDown size={13} strokeWidth={2} className="hidden sm:block text-[var(--term-text-dim)]" />
-          </button>
+          <CommandUserMenu />
         </>
       }
     />
