@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search, Bell, ChevronDown } from "lucide-react";
+import { Bell, ChevronDown } from "lucide-react";
 import { useUser } from "@/lib/supabase/use-user";
 import { useAlertRuleCount } from "@/lib/queries/terminal-queries";
 import { Header } from "./ui/header";
 import { StatusIndicator } from "./ui/status-indicator";
+import { CommandSearch } from "./command-search";
 
 function greetingFor(hour: number) {
   if (hour < 12) return "Good Morning";
@@ -41,23 +42,7 @@ export function CommandHeader() {
             })
           : " "
       }
-      center={
-        <div className="relative">
-          <Search
-            size={14}
-            strokeWidth={1.75}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--term-text-dim)]"
-          />
-          <input
-            type="text"
-            placeholder="Search ticker, sector, analyst, report..."
-            className="w-full rounded-md border border-[var(--term-border)] bg-white/[0.03] py-2 pl-9 pr-14 text-[12.5px] text-[var(--term-text)] placeholder:text-[var(--term-text-dim)] outline-none transition-colors focus:border-[var(--term-border-strong)] focus:bg-white/[0.05]"
-          />
-          <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-[var(--term-border)] bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-medium text-[var(--term-text-dim)]">
-            ⌘K
-          </kbd>
-        </div>
-      }
+      center={<CommandSearch />}
       actions={
         <>
           <StatusIndicator label="LIVE" tone="buy" pulse pill className="hidden sm:inline-flex" />

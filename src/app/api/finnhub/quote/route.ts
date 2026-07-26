@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getQuote } from "@/lib/finnhub/client";
-import { checkRateLimit, clientKeyFromHeaders } from "@/lib/rate-limit";
+import { checkRateLimit, clientKeyFromRequest } from "@/lib/rate-limit";
 
 export async function GET(request: NextRequest) {
-  if (!checkRateLimit(clientKeyFromHeaders(request.headers))) {
+  if (!checkRateLimit(clientKeyFromRequest(request))) {
     return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   }
 

@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { generateCommitteeVerdicts } from "@/lib/committee/generate";
-import { checkRateLimit, clientKeyFromHeaders } from "@/lib/rate-limit";
+import { checkRateLimit, clientKeyFromRequest } from "@/lib/rate-limit";
 
 const FRESH_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 export async function POST(request: NextRequest) {
-  if (!checkRateLimit(clientKeyFromHeaders(request.headers))) {
+  if (!checkRateLimit(clientKeyFromRequest(request))) {
     return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   }
 

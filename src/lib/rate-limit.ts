@@ -27,3 +27,10 @@ export function clientKeyFromHeaders(headers: Headers): string {
   const forwarded = headers.get("x-forwarded-for");
   return forwarded?.split(",")[0]?.trim() ?? "unknown";
 }
+
+// Per-route budget, not just per-client — otherwise one endpoint's polling
+// (e.g. quote refetches) can starve an unrelated one (e.g. search) sharing
+// the same IP bucket.
+export function clientKeyFromRequest(request: { headers: Headers; nextUrl: { pathname: string } }): string {
+  return `${clientKeyFromHeaders(request.headers)}:${request.nextUrl.pathname}`;
+}
