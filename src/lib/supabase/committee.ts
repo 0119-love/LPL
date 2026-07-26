@@ -1,3 +1,4 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "./client";
 
 export type CommitteeVerdictRow = {
@@ -9,8 +10,11 @@ export type CommitteeVerdictRow = {
   generatedAt: string;
 };
 
-export async function fetchCommitteeVerdicts(ticker: string): Promise<CommitteeVerdictRow[]> {
-  const supabase = createClient();
+export async function fetchCommitteeVerdicts(
+  ticker: string,
+  client?: SupabaseClient,
+): Promise<CommitteeVerdictRow[]> {
+  const supabase = client ?? createClient();
   const { data, error } = await supabase
     .from("committee_verdicts")
     .select("member_id, verdict, rationale, detail, related_metric, generated_at, assets!inner(ticker)")

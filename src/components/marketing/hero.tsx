@@ -1,9 +1,11 @@
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { HeroDashboardFrame } from "./hero-dashboard-frame";
+import { getMarketingStats } from "@/lib/marketing-stats";
 
-export function Hero() {
-  const t = useTranslations("Hero");
+export async function Hero() {
+  const t = await getTranslations("Hero");
+  const stats = await getMarketingStats();
 
   return (
     <section className="relative overflow-hidden">
@@ -42,11 +44,29 @@ export function Hero() {
             {t("ctaSecondary")}
           </a>
         </div>
+
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
+          <Stat value={String(stats.memberCount)} label={t("statMembers")} />
+          <Stat value={String(stats.assetsRuledOn)} label={t("statVolume")} />
+          <Stat
+            value={stats.accuracyPct != null ? `${stats.accuracyPct}%` : "—"}
+            label={t("statAccuracy")}
+          />
+        </div>
       </div>
 
       <div className="relative px-4 md:px-6 pb-16 md:pb-24">
         <HeroDashboardFrame />
       </div>
     </section>
+  );
+}
+
+function Stat({ value, label }: { value: string; label: string }) {
+  return (
+    <div className="text-center">
+      <p className="text-2xl font-semibold tabular-nums">{value}</p>
+      <p className="text-xs text-foreground-muted">{label}</p>
+    </div>
   );
 }

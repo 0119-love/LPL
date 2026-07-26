@@ -20,11 +20,23 @@ import { CommitteeMemberRow } from "@/components/dashboard/committee-member-row"
 import { VerdictTimeline } from "@/components/dashboard/verdict-timeline";
 import type { Candle } from "@/lib/yahoo/client";
 
+// Real, publicly-readable committee verdicts shown to signed-out visitors —
+// same fixed tickers as the market tab's demo watchlist. Generation is never
+// triggered here (that requires auth server-side); we only display verdicts
+// that already exist.
+const DEMO_TICKERS = [
+  { ticker: "AAPL", name: "Apple Inc." },
+  { ticker: "NVDA", name: "NVIDIA Corp." },
+  { ticker: "TSLA", name: "Tesla, Inc." },
+];
+
 export function CommitteeTab() {
   const t = useTranslations("Dashboard.committee");
   const { user, loading: userLoading } = useUser();
   const { data: watchlist, isPending: watchlistPending } = useWatchlist();
-  const tickers = watchlist?.map((w) => w.ticker) ?? [];
+  const tickers = user
+    ? (watchlist?.map((w) => w.ticker) ?? [])
+    : DEMO_TICKERS.map((d) => d.ticker);
 
   const { rowsByTicker, pendingByTicker } = useCommitteeVerdictsForTickers(tickers);
   const { candlesByTicker } = useCandlesByTicker(tickers);
@@ -32,16 +44,38 @@ export function CommitteeTab() {
   if (userLoading) return null;
 
   if (!user) {
+    const assetsWithVotes = DEMO_TICKERS.map((d) => ({
+      ticker: d.ticker,
+      name: d.name,
+      votes: toVotes(rowsByTicker[d.ticker] ?? []),
+    }));
+
     return (
-      <GlassCard className="max-w-md">
-        <p className="text-sm">{t("loginRequired")}</p>
-        <Link
-          href="/login"
-          className="mt-3 inline-block rounded-full bg-foreground px-4 py-2 text-xs font-medium text-background"
-        >
-          {t("loginCta")}
-        </Link>
-      </GlassCard>
+      <div className="flex flex-col gap-4">
+        <GlassCard className="flex flex-wrap items-center justify-between gap-3 !py-3">
+          <p className="text-sm text-foreground-muted">{t("demoNotice")}</p>
+          <Link
+            href="/login"
+            className="shrink-0 rounded-full bg-foreground px-4 py-1.5 text-xs font-medium text-background transition-opacity hover:opacity-90"
+          >
+            {t("loginCta")}
+          </Link>
+        </GlassCard>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {assetsWithVotes.map((asset) => (
+            <CommitteeAssetCard
+              key={asset.ticker}
+              ticker={asset.ticker}
+              name={asset.name}
+              votes={asset.votes}
+              pending={pendingByTicker[asset.ticker]}
+              candles={candlesByTicker[asset.ticker]}
+              allowGenerate={false}
+            />
+          ))}
+        </div>
+      </div>
     );
   }
 
@@ -112,23 +146,26 @@ function CommitteeAssetCard({
   votes,
   pending,
   candles,
+  allowGenerate = true,
 }: {
   ticker: string;
   name: string;
   votes: Vote[];
   pending: boolean;
   candles?: Candle[];
+  allowGenerate?: boolean;
 }) {
   const t = useTranslations("Dashboard.committee");
   const generateMutation = useTriggerCommitteeGeneration(ticker);
   const triggered = useRef(false);
 
   useEffect(() => {
+    if (!allowGenerate) return;
     if (pending || votes.length > 0 || triggered.current) return;
     triggered.current = true;
     generateMutation.mutate({ ticker, name });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pending, votes.length, ticker, name]);
+  }, [allowGenerate, pending, votes.length, ticker, name]);
 
   if (votes.length === 0) {
     return (
@@ -137,11 +174,14 @@ function CommitteeAssetCard({
           {ticker}
           <span className="ml-2 text-xs text-foreground-muted">{name}</span>
         </p>
-        {(pending || generateMutation.isPending) && (
+        {allowGenerate && (pending || generateMutation.isPending) && (
           <p className="mt-2 text-sm text-foreground-muted">{t("generating")}</p>
         )}
-        {generateMutation.isError && (
+        {allowGenerate && generateMutation.isError && (
           <p className="mt-2 text-sm text-nobuy">{t("generationFailed")}</p>
+        )}
+        {!allowGenerate && !pending && (
+          <p className="mt-2 text-sm text-foreground-muted">{t("demoNotReady")}</p>
         )}
       </GlassCard>
     );

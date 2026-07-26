@@ -20,7 +20,7 @@
     "subtitle": "Live prices and indicators are just the baseline. Verdict layers a 5-member expert committee's buy / no-buy call on top, so the decision buried in the data gets made for you.",
     "ctaPrimary": "See today's verdicts free",
     "ctaSecondary": "Explore the live demo",
-    "statVolume": "Assets ruled on today",
+    "statVolume": "Assets ruled on so far",
     "statMembers": "Committee members",
     "statAccuracy": "90-day consensus accuracy"
   },
@@ -41,6 +41,19 @@
         "desc": "Unusual volume, sharp drops, and sudden shifts in committee sentiment land in your alerts panel instantly."
       }
     ]
+  },
+  "CommitteeIntro": {
+    "title": "Meet the committee",
+    "subtitle": "Five members, five different philosophies — each casts an independent buy / no-buy call.",
+    "accuracyLabel": "accuracy",
+    "noTrackYet": "No track record yet",
+    "members": {
+      "m1": "Growth & tech trends",
+      "m2": "Fundamentals & cash flow",
+      "m3": "Contrarian value",
+      "m4": "Valuation discipline",
+      "m5": "Macro & risk management"
+    }
   },
   "DashboardPreview": {
     "label": "Live committee dashboard",
@@ -129,9 +142,11 @@
       "incorrect": "Wrong",
       "loginRequired": "Log in to get committee verdicts on your watchlist.",
       "loginCta": "Log in",
+      "demoNotice": "Sample verdicts — log in to get the committee's take on your own watchlist.",
       "emptyWatchlist": "Add a symbol to your watchlist on the Market tab first.",
       "generating": "The committee is deliberating…",
-      "generationFailed": "Couldn't generate a verdict."
+      "generationFailed": "Couldn't generate a verdict.",
+      "demoNotReady": "No sample verdict for this one yet."
     },
     "alerts": {
       "title": "Risk alerts",

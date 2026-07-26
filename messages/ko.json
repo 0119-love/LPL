@@ -20,7 +20,7 @@
     "subtitle": "실시간 시세와 지표는 기본입니다. Verdict는 여기에 5인 전문가 위원회의 매수/비매수 판정을 더해, 데이터에 묻혀 있던 결정을 대신 내려드립니다.",
     "ctaPrimary": "무료로 위원회 판정 보기",
     "ctaSecondary": "라이브 데모 둘러보기",
-    "statVolume": "오늘 판정된 자산",
+    "statVolume": "누적 판정 자산",
     "statMembers": "위원회 인원",
     "statAccuracy": "지난 90일 합의 적중률"
   },
@@ -41,6 +41,19 @@
         "desc": "이상 거래량, 급락, 위원회 의견 급변 등을 즉시 알림 패널로 받아보세요."
       }
     ]
+  },
+  "CommitteeIntro": {
+    "title": "5인 위원회 소개",
+    "subtitle": "서로 다른 투자 철학을 가진 5명이 각자의 기준으로 독립적으로 매수/비매수를 판정합니다.",
+    "accuracyLabel": "적중률",
+    "noTrackYet": "아직 판정 이력 없음",
+    "members": {
+      "m1": "성장주 · 기술 트렌드",
+      "m2": "펀더멘털 · 현금흐름",
+      "m3": "역발상 저평가 발굴",
+      "m4": "밸류에이션 원칙주의",
+      "m5": "매크로 · 리스크 관리"
+    }
   },
   "DashboardPreview": {
     "label": "실시간 위원회 대시보드",
@@ -129,9 +142,11 @@
       "incorrect": "빗나감",
       "loginRequired": "로그인하고 관심 종목의 위원회 판정을 받아보세요.",
       "loginCta": "로그인",
+      "demoNotice": "데모 판정입니다 · 로그인하고 내 워치리스트에 대한 위원회 판정을 받아보세요.",
       "emptyWatchlist": "시세 탭에서 관심 종목을 먼저 추가해주세요.",
       "generating": "위원회가 판정 중입니다…",
-      "generationFailed": "판정 생성에 실패했습니다."
+      "generationFailed": "판정 생성에 실패했습니다.",
+      "demoNotReady": "이 종목의 샘플 판정은 아직 준비되지 않았습니다."
     },
     "alerts": {
       "title": "리스크 알림",
