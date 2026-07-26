@@ -2,14 +2,19 @@ import { useTranslations } from "next-intl";
 import { GlassCard } from "@/components/ui/glass-card";
 import { VerdictBadge } from "@/components/ui/verdict-badge";
 import { Sparkline } from "@/components/ui/sparkline";
-import { assets, consensus } from "@/lib/mock/data";
+import { heroSample } from "./hero-sample-data";
 
 // Reference frame: 198 x 177 — the hero's "main dashboard" preview.
 // Kept at that exact aspect ratio (198/177) and scaled responsively via max-width.
 export function HeroDashboardFrame() {
   const t = useTranslations("DashboardPreview");
-  const featured = assets[0];
-  const c = consensus(featured.votes);
+  const buyCount = heroSample.votes.filter((v) => v === "buy").length;
+  const verdict =
+    buyCount > heroSample.votes.length / 2
+      ? "buy"
+      : buyCount < heroSample.votes.length / 2
+        ? "no_buy"
+        : "split";
 
   return (
     <div className="mx-auto w-full max-w-[560px]">
@@ -35,34 +40,34 @@ export function HeroDashboardFrame() {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-[10px] md:text-xs text-foreground-muted">
-                  {featured.ticker}
+                  {heroSample.ticker}
                 </p>
                 <p className="text-lg md:text-2xl font-semibold tabular-nums">
-                  ${featured.price.toFixed(2)}
+                  ${heroSample.price.toFixed(2)}
                 </p>
               </div>
               <VerdictBadge
-                verdict={c.verdict}
-                label={c.verdict === "buy" ? "BUY" : "NO-BUY"}
+                verdict={verdict}
+                label={verdict === "buy" ? "BUY" : "NO-BUY"}
               />
             </div>
             <Sparkline
-              data={featured.sparkline}
-              positive={featured.changePct >= 0}
+              data={heroSample.sparkline}
+              positive={heroSample.changePct >= 0}
               width={220}
               height={40}
             />
             <div className="flex -space-x-1.5">
-              {featured.votes.map((v) => (
+              {heroSample.votes.map((v, i) => (
                 <div
-                  key={v.memberId}
+                  key={i}
                   className={
-                    v.verdict === "buy"
+                    v === "buy"
                       ? "h-5 w-5 md:h-6 md:w-6 rounded-full border-2 border-background-elevated bg-buy-soft text-buy text-[9px] font-medium grid place-items-center"
                       : "h-5 w-5 md:h-6 md:w-6 rounded-full border-2 border-background-elevated bg-nobuy-soft text-nobuy text-[9px] font-medium grid place-items-center"
                   }
                 >
-                  {v.verdict === "buy" ? "B" : "N"}
+                  {v === "buy" ? "B" : "N"}
                 </div>
               ))}
             </div>

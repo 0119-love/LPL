@@ -1,5 +1,5 @@
 import type { Candle } from "@/lib/yahoo/client";
-import type { Asset, Verdict, VoteHistoryPoint } from "@/lib/mock/data";
+import type { Verdict, Vote, VoteHistoryPoint } from "@/lib/committee/types";
 
 export type AccuracyPoint = {
   daysAgo: number;
@@ -22,7 +22,11 @@ function closestClose(candles: Candle[], targetTime: number): number | null {
   return best.close;
 }
 
-/** Compares each past verdict (daysAgo > 0) against real price movement since then. */
+/**
+ * Compares each past verdict against real price movement since then.
+ * Requires at least a full day of elapsed time — a verdict generated minutes
+ * ago hasn't had a chance to be right or wrong yet.
+ */
 export function computeAccuracy(
   candles: Candle[] | undefined,
   history: VoteHistoryPoint[],
@@ -31,7 +35,7 @@ export function computeAccuracy(
   const nowClose = candles[candles.length - 1].close;
 
   return history
-    .filter((h) => h.daysAgo > 0)
+    .filter((h) => h.daysAgo >= 1)
     .map((h) => {
       const targetTime = Date.now() - h.daysAgo * 24 * 60 * 60 * 1000;
       const priceThen = closestClose(candles, targetTime);
@@ -47,7 +51,7 @@ export type MemberAccuracy = { memberId: string; correct: number; total: number 
 
 /** Aggregates every member's track record across all assets into a win/total tally. */
 export function aggregateAccuracyByMember(
-  assets: Asset[],
+  assets: { ticker: string; votes: Vote[] }[],
   candlesByTicker: Record<string, Candle[] | undefined>,
 ): MemberAccuracy[] {
   const tally = new Map<string, { correct: number; total: number }>();

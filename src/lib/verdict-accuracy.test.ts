@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { aggregateAccuracyByMember, buildTimelineSegments, computeAccuracy } from "./verdict-accuracy";
-import type { Asset, VoteHistoryPoint } from "./mock/data";
+import type { Vote, VoteHistoryPoint } from "./committee/types";
 import type { Candle } from "./yahoo/client";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -57,6 +57,18 @@ describe("computeAccuracy", () => {
 
     expect(result).toHaveLength(1);
     expect(result[0].daysAgo).toBe(10);
+  });
+
+  it("skips a verdict generated minutes ago (fractional daysAgo < 1) — no time to prove out", () => {
+    // Regression test: a freshly AI-generated verdict has daysAgo like 0.002
+    // (a few minutes), which is > 0 but must not be scored as "wrong" just
+    // because the price hasn't moved yet.
+    const candles = [candleAt(10, 100), candleAt(0, 100)];
+    const history: VoteHistoryPoint[] = [{ verdict: "buy", daysAgo: 0.002 }];
+
+    const result = computeAccuracy(candles, history);
+
+    expect(result).toEqual([]);
   });
 
   it("returns an empty array when there is no candle data", () => {
@@ -119,15 +131,9 @@ describe("aggregateAccuracyByMember", () => {
       BBB: [candleAt(10, 100), candleAt(0, 80)], // price fell
     };
 
-    const assets: Asset[] = [
+    const assets: { ticker: string; votes: Vote[] }[] = [
       {
-        id: "1",
         ticker: "AAA",
-        name: "Asset A",
-        price: 120,
-        changePct: 20,
-        volumeToday: 0,
-        sparkline: [],
         votes: [
           {
             memberId: "m1",
@@ -143,13 +149,7 @@ describe("aggregateAccuracyByMember", () => {
         ],
       },
       {
-        id: "2",
         ticker: "BBB",
-        name: "Asset B",
-        price: 80,
-        changePct: -20,
-        volumeToday: 0,
-        sparkline: [],
         votes: [
           {
             memberId: "m1",

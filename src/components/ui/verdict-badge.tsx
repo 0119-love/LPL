@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import type { Verdict } from "@/lib/mock/data";
+import type { Verdict } from "@/lib/committee/types";
 
 export function VerdictBadge({
   verdict,

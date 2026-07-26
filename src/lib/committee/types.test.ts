@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { consensus, type Vote } from "./data";
+import { consensus, type Vote } from "./types";
 
 function vote(memberId: string, verdict: "buy" | "no_buy"): Vote {
   return {

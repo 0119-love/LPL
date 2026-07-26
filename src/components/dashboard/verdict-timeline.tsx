@@ -1,15 +1,21 @@
 import { clsx } from "clsx";
-import { committeeMembers, type Vote } from "@/lib/mock/data";
+import { committeeMembers } from "@/lib/committee/members";
+import type { Vote } from "@/lib/committee/types";
 import { buildTimelineSegments } from "@/lib/verdict-accuracy";
 
-const MAX_DAYS_AGO = 21;
+const MIN_WINDOW_DAYS = 21;
 
 export function VerdictTimeline({ votes }: { votes: Vote[] }) {
+  const oldest = Math.max(
+    MIN_WINDOW_DAYS,
+    ...votes.flatMap((v) => v.history.map((h) => h.daysAgo)),
+  );
+
   return (
     <div className="flex flex-col gap-1.5">
       {votes.map((v) => {
         const member = committeeMembers.find((m) => m.id === v.memberId);
-        const segments = buildTimelineSegments(v.history, MAX_DAYS_AGO);
+        const segments = buildTimelineSegments(v.history, oldest);
 
         return (
           <div key={v.memberId} className="flex items-center gap-2">
@@ -25,7 +31,7 @@ export function VerdictTimeline({ votes }: { votes: Vote[] }) {
                     seg.verdict === "buy" ? "bg-buy" : "bg-nobuy",
                   )}
                   style={{
-                    width: `${((seg.fromDaysAgo - seg.toDaysAgo) / MAX_DAYS_AGO) * 100}%`,
+                    width: `${((seg.fromDaysAgo - seg.toDaysAgo) / oldest) * 100}%`,
                   }}
                 />
               ))}
@@ -34,7 +40,7 @@ export function VerdictTimeline({ votes }: { votes: Vote[] }) {
         );
       })}
       <div className="ml-7 flex justify-between text-[10px] text-foreground-muted">
-        <span>{MAX_DAYS_AGO}d</span>
+        <span>{Math.round(oldest)}d</span>
         <span>today</span>
       </div>
     </div>

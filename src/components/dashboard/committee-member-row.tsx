@@ -4,7 +4,8 @@ import { useState } from "react";
 import { clsx } from "clsx";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { committeeMembers, type Vote } from "@/lib/mock/data";
+import { committeeMembers } from "@/lib/committee/members";
+import type { Vote } from "@/lib/committee/types";
 import { computeAccuracy } from "@/lib/verdict-accuracy";
 import type { Candle } from "@/lib/yahoo/client";
 
@@ -62,7 +63,7 @@ export function CommitteeMemberRow({ vote, candles }: { vote: Vote; candles?: Ca
                 {accuracy.map((a) => (
                   <div key={a.daysAgo} className="flex items-center justify-between text-xs">
                     <span className="text-foreground-muted">
-                      {a.daysAgo}
+                      {Math.round(a.daysAgo)}
                       {t("daysAgoSuffix")} · {a.verdict === "buy" ? t("buy") : t("noBuy")}
                     </span>
                     <span className={a.correct ? "text-buy" : "text-nobuy"}>
