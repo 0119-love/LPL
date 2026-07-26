@@ -77,7 +77,7 @@ export function PortfolioTab() {
             const pnlPct = ((h.price - h.avgCost) / h.avgCost) * 100;
             const positive = pnl >= 0;
             return (
-              <GlassCard key={h.ticker} className={`flex flex-col gap-2 justify-center ${bentoSpan(i === 0 ? "tall" : "small")}`}>
+              <GlassCard key={h.ticker} className={`flex flex-col gap-2 justify-center ${bentoSpan(i === 0 ? "wide" : "small")}`}>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">{h.ticker}</p>
