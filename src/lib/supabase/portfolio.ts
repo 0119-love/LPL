@@ -136,13 +136,24 @@ export async function recordTransaction(input: {
   }
 }
 
+// PGRST205 = "table not found in schema cache" — the 0003 migration hasn't
+// been applied (or PostgREST's cache hasn't refreshed) on this project yet.
+// Degrade to "no history" instead of surfacing an error for something the
+// user can't fix from inside the app.
+function isMissingTable(error: { code?: string; message?: string } | null) {
+  return error?.code === "PGRST205" || error?.message?.includes("schema cache");
+}
+
 export async function fetchSnapshots(): Promise<Snapshot[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("portfolio_snapshots")
     .select("snapshot_date, total_value")
     .order("snapshot_date", { ascending: true });
-  if (error) throw error;
+  if (error) {
+    if (isMissingTable(error)) return [];
+    throw error;
+  }
   return (data ?? []).map((row) => ({
     date: row.snapshot_date as string,
     totalValue: Number(row.total_value),
@@ -155,10 +166,13 @@ export async function recordSnapshot(totalValue: number) {
   if (!userData.user) return;
 
   const today = new Date().toISOString().slice(0, 10);
-  await supabase
+  const { error } = await supabase
     .from("portfolio_snapshots")
     .upsert(
       { user_id: userData.user.id, snapshot_date: today, total_value: totalValue },
       { onConflict: "user_id,snapshot_date" },
     );
+  if (error && !isMissingTable(error)) {
+    console.error("recordSnapshot failed:", error);
+  }
 }

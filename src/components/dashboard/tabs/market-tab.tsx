@@ -1,10 +1,11 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { X, Gavel, BellRing, LineChart } from "lucide-react";
+import { X, Gavel, BellRing, Search } from "lucide-react";
 import { GlassCard } from "@/components/ui/glass-card";
 import { BentoGrid, bentoSpan, type BentoSize } from "@/components/ui/bento-grid";
-import { PlaceholderTile } from "@/components/ui/placeholder-tile";
+import { FeatureTeaser } from "@/components/ui/feature-teaser";
+import { VerdictBadge } from "@/components/ui/verdict-badge";
 import { AssetSearch } from "@/components/dashboard/asset-search";
 import { Link } from "@/i18n/navigation";
 import { useUser } from "@/lib/supabase/use-user";
@@ -115,19 +116,48 @@ export function MarketTab() {
             ))
           ) : (
             <>
-              <GlassCard className={`${bentoSpan("hero")} flex flex-col justify-center`}>
-                <p className="text-sm text-foreground-muted">{t("emptyWatchlist")}</p>
+              <GlassCard className={`${bentoSpan("hero")} flex flex-col items-center justify-center gap-3 text-center`}>
+                <Search size={22} strokeWidth={1.5} className="text-foreground-muted" />
+                <p className="max-w-[220px] text-sm text-foreground-muted">{t("emptyWatchlist")}</p>
               </GlassCard>
-              <PlaceholderTile
-                icon={Gavel}
-                label={t("comingCommittee")}
-                className={bentoSpan("tall")}
-              />
-              <PlaceholderTile
-                icon={BellRing}
-                label={t("comingAlerts")}
-                className={bentoSpan("tall")}
-              />
+
+              <FeatureTeaser icon={Gavel} label={t("comingCommittee")} className={bentoSpan("tall")}>
+                <div className="flex h-full flex-col justify-center gap-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium">AAPL</p>
+                      <p className="text-[11px] text-foreground-muted">Apple Inc.</p>
+                    </div>
+                    <VerdictBadge verdict="buy" label="BUY" />
+                  </div>
+                  <div className="flex -space-x-1.5">
+                    {["buy", "buy", "no_buy", "buy", "no_buy"].map((v, i) => (
+                      <div
+                        key={i}
+                        className={
+                          v === "buy"
+                            ? "h-5 w-5 rounded-full border-2 border-background bg-buy-soft"
+                            : "h-5 w-5 rounded-full border-2 border-background bg-nobuy-soft"
+                        }
+                      />
+                    ))}
+                  </div>
+                </div>
+              </FeatureTeaser>
+
+              <FeatureTeaser icon={BellRing} label={t("comingAlerts")} className={bentoSpan("tall")}>
+                <div className="flex h-full flex-col justify-center gap-3">
+                  <div>
+                    <p className="text-sm font-medium">
+                      NVDA <span className="font-normal text-foreground-muted">$180.00+</span>
+                    </p>
+                    <p className="text-[11px] text-foreground-muted">$187.42</p>
+                  </div>
+                  <span className="w-fit rounded-full bg-buy-soft px-2 py-0.5 text-[11px] font-medium text-buy">
+                    ● triggered
+                  </span>
+                </div>
+              </FeatureTeaser>
             </>
           )}
         </BentoGrid>
