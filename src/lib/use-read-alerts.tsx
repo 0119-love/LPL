@@ -1,17 +1,30 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useSyncExternalStore } from "react";
 
 const STORAGE_KEY = "verdict-read-alerts";
+const CHANGE_EVENT = "verdict-read-alerts-change";
 
-function loadRead(): Set<string> {
-  if (typeof window === "undefined") return new Set();
+function readRaw(): string {
+  if (typeof window === "undefined") return "[]";
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return new Set(raw ? (JSON.parse(raw) as string[]) : []);
+    return localStorage.getItem(STORAGE_KEY) ?? "[]";
   } catch {
-    return new Set();
+    return "[]";
   }
+}
+
+function getServerSnapshot(): string {
+  return "[]";
+}
+
+function subscribe(callback: () => void) {
+  window.addEventListener("storage", callback);
+  window.addEventListener(CHANGE_EVENT, callback);
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener(CHANGE_EVENT, callback);
+  };
 }
 
 type ReadAlertsContextValue = {
@@ -22,23 +35,24 @@ type ReadAlertsContextValue = {
 const ReadAlertsContext = createContext<ReadAlertsContextValue | null>(null);
 
 export function ReadAlertsProvider({ children }: { children: React.ReactNode }) {
-  const [readIds, setReadIds] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    setReadIds(loadRead());
-  }, []);
+  const raw = useSyncExternalStore(subscribe, readRaw, getServerSnapshot);
+  const readIds = useMemo(() => {
+    try {
+      return new Set<string>(JSON.parse(raw));
+    } catch {
+      return new Set<string>();
+    }
+  }, [raw]);
 
   const toggleRead = useCallback((id: string) => {
-    setReadIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify([...next]));
-      return next;
-    });
+    const current = new Set<string>(JSON.parse(readRaw()));
+    if (current.has(id)) {
+      current.delete(id);
+    } else {
+      current.add(id);
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...current]));
+    window.dispatchEvent(new Event(CHANGE_EVENT));
   }, []);
 
   return (
