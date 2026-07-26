@@ -122,7 +122,9 @@
       "emptyWatchlist": "No symbols yet. Search above to add your first one.",
       "quoteUnavailable": "Quote unavailable",
       "remove": "Remove {ticker} from watchlist",
-      "addFailed": "Couldn't add that symbol. Please try again."
+      "addFailed": "Couldn't add that symbol. Please try again.",
+      "comingCommittee": "Committee verdict",
+      "comingAlerts": "Price alerts"
     },
     "committee": {
       "title": "Committee verdicts",

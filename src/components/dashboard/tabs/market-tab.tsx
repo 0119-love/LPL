@@ -1,8 +1,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { X } from "lucide-react";
+import { X, Gavel, BellRing, LineChart } from "lucide-react";
 import { GlassCard } from "@/components/ui/glass-card";
+import { BentoGrid, bentoSpan, type BentoSize } from "@/components/ui/bento-grid";
+import { PlaceholderTile } from "@/components/ui/placeholder-tile";
 import { AssetSearch } from "@/components/dashboard/asset-search";
 import { Link } from "@/i18n/navigation";
 import { useUser } from "@/lib/supabase/use-user";
@@ -20,6 +22,14 @@ const DEMO_WATCHLIST = [
   { ticker: "NVDA", name: "NVIDIA Corp." },
   { ticker: "TSLA", name: "Tesla, Inc." },
 ];
+
+// First tile is the featured 2x2 hero, next two are tall — together they
+// fill a clean 4x2 block on desktop before falling back to small tiles.
+function sizeForIndex(index: number): BentoSize {
+  if (index === 0) return "hero";
+  if (index === 1 || index === 2) return "tall";
+  return "small";
+}
 
 export function MarketTab() {
   const t = useTranslations("Dashboard.market");
@@ -53,17 +63,18 @@ export function MarketTab() {
           </Link>
         </GlassCard>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {DEMO_WATCHLIST.map((item) => (
+        <BentoGrid>
+          {DEMO_WATCHLIST.map((item, i) => (
             <TickerCard
               key={item.ticker}
               ticker={item.ticker}
               name={item.name}
               quote={quotes?.[item.ticker]}
               quotesPending={quotesPending}
+              size={sizeForIndex(i)}
             />
           ))}
-        </div>
+        </BentoGrid>
       </div>
     );
   }
@@ -74,9 +85,7 @@ export function MarketTab() {
         <AssetSearch />
       </div>
 
-      {watchlistPending && (
-        <p className="text-sm text-foreground-muted">…</p>
-      )}
+      {watchlistPending && <p className="text-sm text-foreground-muted">…</p>}
 
       {watchlistError && (
         <GlassCard className="max-w-md">
@@ -90,24 +99,39 @@ export function MarketTab() {
         </GlassCard>
       )}
 
-      {!watchlistPending && !watchlistError && watchlist?.length === 0 && (
-        <GlassCard className="max-w-md">
-          <p className="text-sm text-foreground-muted">{t("emptyWatchlist")}</p>
-        </GlassCard>
+      {!watchlistPending && !watchlistError && (
+        <BentoGrid>
+          {watchlist && watchlist.length > 0 ? (
+            watchlist.map((item, i) => (
+              <TickerCard
+                key={item.watchlistId}
+                ticker={item.ticker}
+                name={item.name}
+                quote={quotes?.[item.ticker]}
+                quotesPending={quotesPending}
+                onRemove={() => removeMutation.mutate(item.watchlistId)}
+                size={sizeForIndex(i)}
+              />
+            ))
+          ) : (
+            <>
+              <GlassCard className={`${bentoSpan("hero")} flex flex-col justify-center`}>
+                <p className="text-sm text-foreground-muted">{t("emptyWatchlist")}</p>
+              </GlassCard>
+              <PlaceholderTile
+                icon={Gavel}
+                label={t("comingCommittee")}
+                className={bentoSpan("tall")}
+              />
+              <PlaceholderTile
+                icon={BellRing}
+                label={t("comingAlerts")}
+                className={bentoSpan("tall")}
+              />
+            </>
+          )}
+        </BentoGrid>
       )}
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {watchlist?.map((item) => (
-          <TickerCard
-            key={item.watchlistId}
-            ticker={item.ticker}
-            name={item.name}
-            quote={quotes?.[item.ticker]}
-            quotesPending={quotesPending}
-            onRemove={() => removeMutation.mutate(item.watchlistId)}
-          />
-        ))}
-      </div>
     </div>
   );
 }
@@ -118,22 +142,27 @@ function TickerCard({
   quote,
   quotesPending,
   onRemove,
+  size,
 }: {
   ticker: string;
   name: string;
   quote?: FinnhubQuote;
   quotesPending: boolean;
   onRemove?: () => void;
+  size: BentoSize;
 }) {
   const t = useTranslations("Dashboard.market");
   const positive = (quote?.dp ?? 0) >= 0;
+  const compact = size === "small";
 
   return (
-    <GlassCard className="flex flex-col gap-3 transition-colors hover:border-white/20">
+    <GlassCard
+      className={`flex flex-col gap-3 transition-colors hover:border-white/20 ${bentoSpan(size)}`}
+    >
       <div className="flex items-start justify-between">
         <Link href={`/asset/${ticker}`} className="min-w-0 hover:opacity-80">
-          <p className="font-medium">{ticker}</p>
-          <p className="text-xs text-foreground-muted truncate">{name}</p>
+          <p className={compact ? "text-sm font-medium" : "font-medium"}>{ticker}</p>
+          {!compact && <p className="text-xs text-foreground-muted truncate">{name}</p>}
         </Link>
         {onRemove && (
           <button
@@ -141,7 +170,7 @@ function TickerCard({
             className="text-foreground-muted hover:text-foreground"
             aria-label={t("remove", { ticker })}
           >
-            <X size={16} />
+            <X size={14} />
           </button>
         )}
       </div>
@@ -149,9 +178,9 @@ function TickerCard({
       {quotesPending && !quote ? (
         <p className="text-sm text-foreground-muted">…</p>
       ) : quote ? (
-        <>
+        <div className="flex flex-1 flex-col justify-end gap-2.5">
           <div className="flex items-baseline justify-between">
-            <p className="text-2xl font-semibold tabular-nums">
+            <p className={compact ? "text-lg font-semibold tabular-nums" : "text-2xl font-semibold tabular-nums"}>
               ${quote.c.toFixed(2)}
             </p>
             <span
@@ -165,19 +194,21 @@ function TickerCard({
               {quote.dp.toFixed(2)}%
             </span>
           </div>
-          <div className="flex items-center justify-between border-t border-border-subtle pt-2.5 text-[11px] text-foreground-muted">
-            <span>
-              H <span className="tabular-nums text-foreground">{quote.h.toFixed(2)}</span>
-            </span>
-            <span>
-              L <span className="tabular-nums text-foreground">{quote.l.toFixed(2)}</span>
-            </span>
-            <span>
-              {t("todaySuffix")}{" "}
-              <span className="tabular-nums text-foreground">{quote.pc.toFixed(2)}</span>
-            </span>
-          </div>
-        </>
+          {!compact && (
+            <div className="flex items-center justify-between border-t border-border-subtle pt-2.5 text-[11px] text-foreground-muted">
+              <span>
+                H <span className="tabular-nums text-foreground">{quote.h.toFixed(2)}</span>
+              </span>
+              <span>
+                L <span className="tabular-nums text-foreground">{quote.l.toFixed(2)}</span>
+              </span>
+              <span>
+                {t("todaySuffix")}{" "}
+                <span className="tabular-nums text-foreground">{quote.pc.toFixed(2)}</span>
+              </span>
+            </div>
+          )}
+        </div>
       ) : (
         <p className="text-sm text-foreground-muted">{t("quoteUnavailable")}</p>
       )}

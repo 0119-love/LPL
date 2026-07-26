@@ -6,6 +6,7 @@ import { ChevronDown, Lightbulb, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useAlerts } from "@/lib/queries/dashboard-queries";
 import { GlassCard } from "@/components/ui/glass-card";
+import { BentoGrid, bentoSpan } from "@/components/ui/bento-grid";
 import { useUser } from "@/lib/supabase/use-user";
 import { useReadAlerts } from "@/lib/use-read-alerts";
 import { AlertRuleForm } from "@/components/dashboard/alert-rule-form";
@@ -30,9 +31,9 @@ export function AlertsTab() {
   const highCount = visibleAlerts.filter((a) => a.severity === "high").length;
 
   return (
-    <div className="flex flex-col gap-4">
+    <BentoGrid>
       {alerts && alerts.length > 0 && (
-        <GlassCard strong className="max-w-2xl !p-0 overflow-hidden">
+        <GlassCard strong className={`!p-0 overflow-hidden ${bentoSpan("hero")}`}>
           <div className="flex items-center justify-between px-4 py-3">
             <button
               onClick={() => setCollapsed((v) => !v)}
@@ -90,8 +91,8 @@ export function AlertsTab() {
         </GlassCard>
       )}
 
-      <div className="max-w-2xl">
-        <p className="mb-2 text-sm text-foreground-muted">{t("myRules")}</p>
+      <div className={`flex flex-col gap-2 ${bentoSpan("tall")}`}>
+        <p className="text-sm text-foreground-muted">{t("myRules")}</p>
         {!userLoading && !user && (
           <SamplePreview message={t("loginRequired")} cta={t("loginCta")}>
             <div className="flex flex-col gap-2">
@@ -120,13 +121,13 @@ export function AlertsTab() {
           </SamplePreview>
         )}
         {user && (
-          <GlassCard className="flex flex-col gap-4">
+          <GlassCard className="flex flex-1 flex-col gap-4">
             <AlertRuleForm />
             <AlertRuleList />
           </GlassCard>
         )}
       </div>
-    </div>
+    </BentoGrid>
   );
 }
 

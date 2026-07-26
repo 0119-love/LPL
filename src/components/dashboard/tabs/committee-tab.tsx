@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { GlassCard } from "@/components/ui/glass-card";
 import { VerdictBadge } from "@/components/ui/verdict-badge";
+import { BentoGrid, bentoSpan, type BentoSize } from "@/components/ui/bento-grid";
 import { Link } from "@/i18n/navigation";
 import { useUser } from "@/lib/supabase/use-user";
 import { useWatchlist } from "@/lib/queries/market-queries";
@@ -62,8 +63,8 @@ export function CommitteeTab() {
           </Link>
         </GlassCard>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {assetsWithVotes.map((asset) => (
+        <BentoGrid>
+          {assetsWithVotes.map((asset, i) => (
             <CommitteeAssetCard
               key={asset.ticker}
               ticker={asset.ticker}
@@ -72,9 +73,10 @@ export function CommitteeTab() {
               pending={pendingByTicker[asset.ticker]}
               candles={candlesByTicker[asset.ticker]}
               allowGenerate={false}
+              size={i === 0 ? "full" : "wide"}
             />
           ))}
-        </div>
+        </BentoGrid>
       </div>
     );
   }
@@ -104,28 +106,35 @@ export function CommitteeTab() {
   return (
     <div className="flex flex-col gap-4">
       {leaderboard.length > 0 && (
-        <GlassCard strong>
-          <p className="mb-3 text-sm text-foreground-muted">{t("leaderboard")}</p>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-            {leaderboard.map((m) => {
+        <div>
+          <p className="mb-2 text-sm text-foreground-muted">{t("leaderboard")}</p>
+          <BentoGrid className="auto-rows-[minmax(72px,auto)]">
+            {leaderboard.map((m, i) => {
               const member = committeeMembers.find((c) => c.id === m.memberId);
               const pct = (m.correct / m.total) * 100;
+              const size: BentoSize = i === 0 ? "wide" : "small";
               return (
-                <div key={m.memberId} className="rounded-lg border border-border-subtle bg-white/[0.02] px-3 py-2">
+                <GlassCard
+                  key={m.memberId}
+                  strong={i === 0}
+                  className={`flex flex-col justify-center ${bentoSpan(size)}`}
+                >
                   <p className="text-xs text-foreground-muted">{member?.name}</p>
-                  <p className="text-lg font-medium tabular-nums">{pct.toFixed(0)}%</p>
+                  <p className={i === 0 ? "text-3xl font-semibold tabular-nums" : "text-lg font-medium tabular-nums"}>
+                    {pct.toFixed(0)}%
+                  </p>
                   <p className="text-[11px] text-foreground-muted">
                     {m.correct}/{m.total} {t("calls")}
                   </p>
-                </div>
+                </GlassCard>
               );
             })}
-          </div>
-        </GlassCard>
+          </BentoGrid>
+        </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {assetsWithVotes.map((asset) => (
+      <BentoGrid>
+        {assetsWithVotes.map((asset, i) => (
           <CommitteeAssetCard
             key={asset.ticker}
             ticker={asset.ticker}
@@ -133,9 +142,10 @@ export function CommitteeTab() {
             votes={asset.votes}
             pending={pendingByTicker[asset.ticker]}
             candles={candlesByTicker[asset.ticker]}
+            size={i === 0 ? "full" : "wide"}
           />
         ))}
-      </div>
+      </BentoGrid>
     </div>
   );
 }
@@ -146,6 +156,7 @@ function CommitteeAssetCard({
   votes,
   pending,
   candles,
+  size,
   allowGenerate = true,
 }: {
   ticker: string;
@@ -153,6 +164,7 @@ function CommitteeAssetCard({
   votes: Vote[];
   pending: boolean;
   candles?: Candle[];
+  size: BentoSize;
   allowGenerate?: boolean;
 }) {
   const t = useTranslations("Dashboard.committee");
@@ -169,7 +181,7 @@ function CommitteeAssetCard({
 
   if (votes.length === 0) {
     return (
-      <GlassCard strong>
+      <GlassCard strong className={bentoSpan(size)}>
         <p className="font-medium">
           {ticker}
           <span className="ml-2 text-xs text-foreground-muted">{name}</span>
@@ -196,7 +208,7 @@ function CommitteeAssetCard({
         : t("consensusSplit");
 
   return (
-    <GlassCard strong className="flex flex-col gap-4">
+    <GlassCard strong className={`flex flex-col gap-4 ${bentoSpan(size)}`}>
       <div className="flex items-center justify-between">
         <div>
           <p className="font-medium">
@@ -215,7 +227,7 @@ function CommitteeAssetCard({
         <VerdictTimeline votes={votes} />
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className={size === "full" ? "grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3" : "flex flex-col gap-3"}>
         {votes.map((vote) => (
           <CommitteeMemberRow key={vote.memberId} vote={vote} candles={candles} />
         ))}

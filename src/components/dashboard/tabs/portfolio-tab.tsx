@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { GlassCard } from "@/components/ui/glass-card";
+import { BentoGrid, bentoSpan } from "@/components/ui/bento-grid";
 import { Link } from "@/i18n/navigation";
 import { useUser } from "@/lib/supabase/use-user";
 import { useQuotes } from "@/lib/queries/market-queries";
@@ -60,8 +61,8 @@ export function PortfolioTab() {
   if (!user) {
     return (
       <SamplePreview message={t("loginRequired")} cta={t("loginCta")}>
-        <div className="flex flex-col gap-4">
-          <GlassCard strong className="max-w-2xl">
+        <BentoGrid>
+          <GlassCard strong className={`flex flex-col justify-center ${bentoSpan("hero")}`}>
             <p className="text-sm text-foreground-muted">{t("totalValue")}</p>
             <div className="mt-1 flex items-baseline gap-3">
               <p className="text-3xl font-semibold tabular-nums">$84,210.55</p>
@@ -71,40 +72,38 @@ export function PortfolioTab() {
             </div>
           </GlassCard>
 
-          <div className="grid max-w-2xl grid-cols-1 gap-4 md:grid-cols-2">
-            {SAMPLE_HOLDINGS.map((h) => {
-              const pnl = (h.price - h.avgCost) * h.quantity;
-              const pnlPct = ((h.price - h.avgCost) / h.avgCost) * 100;
-              const positive = pnl >= 0;
-              return (
-                <GlassCard key={h.ticker} className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">{h.ticker}</p>
-                      <p className="text-xs text-foreground-muted">
-                        {h.quantity} {t("shares")} @ ${h.avgCost.toFixed(2)}
-                      </p>
-                    </div>
-                    <p className="text-sm tabular-nums">
-                      ${(h.price * h.quantity).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+          {SAMPLE_HOLDINGS.map((h, i) => {
+            const pnl = (h.price - h.avgCost) * h.quantity;
+            const pnlPct = ((h.price - h.avgCost) / h.avgCost) * 100;
+            const positive = pnl >= 0;
+            return (
+              <GlassCard key={h.ticker} className={`flex flex-col gap-2 justify-center ${bentoSpan(i === 0 ? "tall" : "small")}`}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">{h.ticker}</p>
+                    <p className="text-xs text-foreground-muted">
+                      {h.quantity} {t("shares")} @ ${h.avgCost.toFixed(2)}
                     </p>
                   </div>
-                  <span
-                    className={
-                      positive
-                        ? "w-fit rounded-full bg-buy-soft px-2 py-0.5 text-xs font-medium text-buy tabular-nums"
-                        : "w-fit rounded-full bg-nobuy-soft px-2 py-0.5 text-xs font-medium text-nobuy tabular-nums"
-                    }
-                  >
-                    {positive ? "+" : ""}
-                    {pnl.toFixed(2)} ({positive ? "+" : ""}
-                    {pnlPct.toFixed(1)}%)
-                  </span>
-                </GlassCard>
-              );
-            })}
-          </div>
-        </div>
+                  <p className="text-sm tabular-nums">
+                    ${(h.price * h.quantity).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                  </p>
+                </div>
+                <span
+                  className={
+                    positive
+                      ? "w-fit rounded-full bg-buy-soft px-2 py-0.5 text-xs font-medium text-buy tabular-nums"
+                      : "w-fit rounded-full bg-nobuy-soft px-2 py-0.5 text-xs font-medium text-nobuy tabular-nums"
+                  }
+                >
+                  {positive ? "+" : ""}
+                  {pnl.toFixed(2)} ({positive ? "+" : ""}
+                  {pnlPct.toFixed(1)}%)
+                </span>
+              </GlassCard>
+            );
+          })}
+        </BentoGrid>
       </SamplePreview>
     );
   }
@@ -133,8 +132,8 @@ export function PortfolioTab() {
     <div className="flex flex-col gap-4">
       <TransactionForm />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <GlassCard strong className="md:col-span-2">
+      <BentoGrid>
+        <GlassCard strong className={`flex flex-col ${bentoSpan("hero")}`}>
           <p className="text-sm text-foreground-muted">{t("totalValue")}</p>
           <div className="mt-1 flex items-baseline gap-3">
             <p className="text-3xl font-semibold tabular-nums">
@@ -163,7 +162,7 @@ export function PortfolioTab() {
           {snapshots && <PortfolioValueChart snapshots={snapshots} />}
         </GlassCard>
 
-        <GlassCard>
+        <GlassCard className={bentoSpan("wide")}>
           <p className="text-sm text-foreground-muted mb-2">{t("allocation")}</p>
           {allocation.length > 0 ? (
             <AllocationDonut data={allocation} />
@@ -171,49 +170,42 @@ export function PortfolioTab() {
             <p className="text-sm text-foreground-muted">{t("emptyHoldings")}</p>
           )}
         </GlassCard>
-      </div>
 
-      {holdings && holdings.length > 0 && (
-        <div>
-          <p className="text-sm text-foreground-muted mb-2">{t("holdings")}</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {holdings.map((h) => {
-              const price = quotes?.[h.ticker]?.c ?? h.avgCost;
-              const pnl = (price - h.avgCost) * h.quantity;
-              const pnlPct = h.avgCost > 0 ? ((price - h.avgCost) / h.avgCost) * 100 : 0;
-              const positive = pnl >= 0;
-              return (
-                <Link key={h.id} href={`/asset/${h.ticker}`}>
-                  <GlassCard className="flex flex-col gap-2 transition-colors hover:border-white/20">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">{h.ticker}</p>
-                        <p className="text-xs text-foreground-muted">
-                          {h.quantity} {t("shares")} @ ${h.avgCost.toFixed(2)}
-                        </p>
-                      </div>
-                      <p className="text-sm tabular-nums">
-                        ${(price * h.quantity).toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                      </p>
-                    </div>
-                    <span
-                      className={
-                        positive
-                          ? "w-fit rounded-full bg-buy-soft px-2 py-0.5 text-xs font-medium text-buy tabular-nums"
-                          : "w-fit rounded-full bg-nobuy-soft px-2 py-0.5 text-xs font-medium text-nobuy tabular-nums"
-                      }
-                    >
-                      {positive ? "+" : ""}
-                      {pnl.toFixed(2)} ({positive ? "+" : ""}
-                      {pnlPct.toFixed(1)}%)
-                    </span>
-                  </GlassCard>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      )}
+        {holdings?.map((h, i) => {
+          const price = quotes?.[h.ticker]?.c ?? h.avgCost;
+          const pnl = (price - h.avgCost) * h.quantity;
+          const pnlPct = h.avgCost > 0 ? ((price - h.avgCost) / h.avgCost) * 100 : 0;
+          const positive = pnl >= 0;
+          return (
+            <Link key={h.id} href={`/asset/${h.ticker}`} className={bentoSpan(i === 0 ? "wide" : "small")}>
+              <GlassCard className="flex h-full flex-col justify-center gap-2 transition-colors hover:border-white/20">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">{h.ticker}</p>
+                    <p className="text-xs text-foreground-muted">
+                      {h.quantity} {t("shares")} @ ${h.avgCost.toFixed(2)}
+                    </p>
+                  </div>
+                  <p className="text-sm tabular-nums">
+                    ${(price * h.quantity).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                  </p>
+                </div>
+                <span
+                  className={
+                    positive
+                      ? "w-fit rounded-full bg-buy-soft px-2 py-0.5 text-xs font-medium text-buy tabular-nums"
+                      : "w-fit rounded-full bg-nobuy-soft px-2 py-0.5 text-xs font-medium text-nobuy tabular-nums"
+                  }
+                >
+                  {positive ? "+" : ""}
+                  {pnl.toFixed(2)} ({positive ? "+" : ""}
+                  {pnlPct.toFixed(1)}%)
+                </span>
+              </GlassCard>
+            </Link>
+          );
+        })}
+      </BentoGrid>
 
       {transactions && (
         <div>
@@ -223,32 +215,32 @@ export function PortfolioTab() {
               <p className="text-sm text-foreground-muted">{t("emptyTransactions")}</p>
             </GlassCard>
           ) : (
-          <GlassCard className="!p-0 overflow-hidden">
-            <div className="divide-y divide-border-subtle">
-              {transactions.map((tx) => (
-                <div key={tx.id} className="flex items-center justify-between px-4 py-2.5 text-sm">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={
-                        tx.side === "buy"
-                          ? "rounded-full bg-buy-soft px-2 py-0.5 text-[11px] text-buy"
-                          : "rounded-full bg-nobuy-soft px-2 py-0.5 text-[11px] text-nobuy"
-                      }
-                    >
-                      {tx.side === "buy" ? t("buy") : t("sell")}
-                    </span>
-                    <span className="font-medium">{tx.ticker}</span>
+            <GlassCard className="!p-0 overflow-hidden">
+              <div className="divide-y divide-border-subtle">
+                {transactions.map((tx) => (
+                  <div key={tx.id} className="flex items-center justify-between px-4 py-2.5 text-sm">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={
+                          tx.side === "buy"
+                            ? "rounded-full bg-buy-soft px-2 py-0.5 text-[11px] text-buy"
+                            : "rounded-full bg-nobuy-soft px-2 py-0.5 text-[11px] text-nobuy"
+                        }
+                      >
+                        {tx.side === "buy" ? t("buy") : t("sell")}
+                      </span>
+                      <span className="font-medium">{tx.ticker}</span>
+                      <span className="text-xs text-foreground-muted">
+                        {tx.quantity} @ ${tx.price.toFixed(2)}
+                      </span>
+                    </div>
                     <span className="text-xs text-foreground-muted">
-                      {tx.quantity} @ ${tx.price.toFixed(2)}
+                      {new Date(tx.executedAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <span className="text-xs text-foreground-muted">
-                    {new Date(tx.executedAt).toLocaleDateString()}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </GlassCard>
+                ))}
+              </div>
+            </GlassCard>
           )}
         </div>
       )}
