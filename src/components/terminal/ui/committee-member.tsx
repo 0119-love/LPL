@@ -1,16 +1,19 @@
 import { TONE_TEXT_CLASS } from "./tone";
 import { verdictTone } from "./signal-badge";
 
+export type CommitteeVerdict = "BUY" | "NO_BUY";
+
 export type CommitteeMemberData = {
   id: string;
   initial: string;
   name: string;
   role: string;
-  verdict: "BUY" | "HOLD" | "SELL";
+  verdict: CommitteeVerdict;
   score: number;
 };
 
 const ROW_COLS = "grid-cols-[1fr_64px_96px] sm:grid-cols-[1fr_72px_120px]";
+const VERDICT_LABEL: Record<CommitteeVerdict, string> = { BUY: "BUY", NO_BUY: "NO-BUY" };
 
 export function CommitteeMember({
   initial,
@@ -22,7 +25,7 @@ export function CommitteeMember({
   initial: string;
   name: string;
   role: string;
-  verdict: "BUY" | "HOLD" | "SELL";
+  verdict: CommitteeVerdict;
   score: number;
 }) {
   const tone = verdictTone(verdict);
@@ -38,7 +41,9 @@ export function CommitteeMember({
           <p className="text-[10.5px] text-[var(--term-text-dim)] truncate">{role}</p>
         </div>
       </div>
-      <span className={`text-[11.5px] font-semibold ${TONE_TEXT_CLASS[tone]}`}>{verdict}</span>
+      <span className={`text-[11.5px] font-semibold ${TONE_TEXT_CLASS[tone]}`}>
+        {VERDICT_LABEL[verdict]}
+      </span>
       <div className="flex items-center gap-2">
         <div className="h-1 flex-1 overflow-hidden rounded-full bg-white/[0.06]">
           <div className="h-full rounded-full bg-[var(--term-cyan)]" style={{ width: `${score}%` }} />

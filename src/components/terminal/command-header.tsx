@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Search, Bell, ChevronDown } from "lucide-react";
 import { useUser } from "@/lib/supabase/use-user";
-import { intelligenceFeed } from "@/lib/terminal/mock-data";
+import { useAlertRuleCount } from "@/lib/queries/terminal-queries";
 import { Header } from "./ui/header";
 import { StatusIndicator } from "./ui/status-indicator";
 
@@ -24,6 +24,7 @@ export function CommandHeader() {
 
   const displayName = user?.email?.split("@")[0] ?? "Investor";
   const capitalized = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+  const { data: alertRuleCount } = useAlertRuleCount();
 
   return (
     <Header
@@ -63,12 +64,13 @@ export function CommandHeader() {
 
           <button
             aria-label="notifications"
+            title={alertRuleCount ? `${alertRuleCount} price alerts configured` : undefined}
             className="relative flex h-8 w-8 items-center justify-center rounded-md text-[var(--term-text-mid)] transition-colors hover:bg-white/[0.05] hover:text-[var(--term-text)]"
           >
             <Bell size={16} strokeWidth={1.75} />
-            {intelligenceFeed.length > 0 && (
+            {!!alertRuleCount && alertRuleCount > 0 && (
               <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--term-nobuy)] px-1 text-[9.5px] font-semibold text-white">
-                {intelligenceFeed.length}
+                {alertRuleCount}
               </span>
             )}
           </button>

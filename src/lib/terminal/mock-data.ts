@@ -40,16 +40,17 @@ export type CommitteeAnalyst = {
   id: string;
   name: string;
   role: string;
-  verdict: "BUY" | "HOLD" | "SELL";
+  verdict: "BUY" | "NO_BUY";
   score: number;
 };
 
 // Same 5 people as the real committee (lib/committee/members.ts), reframed
-// with terminal-style functional role labels for this design.
+// with terminal-style functional role labels for this design. Used as the
+// fallback/demo view before a real committee verdict has loaded.
 export const committeeAnalysts: CommitteeAnalyst[] = [
   { id: "m1", name: "Kang", role: "Chart Analyst", verdict: "BUY", score: 84 },
   { id: "m2", name: "Lee", role: "News Analyst", verdict: "BUY", score: 77 },
-  { id: "m3", name: "Park", role: "Fundamental Analyst", verdict: "HOLD", score: 61 },
+  { id: "m3", name: "Park", role: "Fundamental Analyst", verdict: "NO_BUY", score: 61 },
   { id: "m4", name: "Sofia", role: "Market Strategist", verdict: "BUY", score: 81 },
   { id: "m5", name: "Devon", role: "Deep Research", verdict: "BUY", score: 89 },
 ];

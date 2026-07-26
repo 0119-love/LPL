@@ -54,6 +54,22 @@ export async function getCandles(symbol: string, range: ChartRange): Promise<Can
     }));
 }
 
+export type YahooQuote = {
+  symbol: string;
+  price: number | null;
+  changePercent: number | null;
+};
+
+export async function getQuotes(symbols: string[]): Promise<YahooQuote[]> {
+  const results = await yahooFinance.quote(symbols);
+  const arr = Array.isArray(results) ? results : [results];
+  return arr.map((q) => ({
+    symbol: q.symbol,
+    price: q.regularMarketPrice ?? null,
+    changePercent: q.regularMarketChangePercent ?? null,
+  }));
+}
+
 export async function getFundamentals(symbol: string) {
   const summary = await yahooFinance.quoteSummary(symbol, {
     modules: ["financialData", "defaultKeyStatistics", "summaryDetail"],

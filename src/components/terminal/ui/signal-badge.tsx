@@ -31,8 +31,8 @@ export function SignalBadge({
   );
 }
 
-export function verdictTone(verdict: "BUY" | "HOLD" | "SELL"): Tone {
-  if (verdict === "BUY") return "buy";
-  if (verdict === "SELL") return "nobuy";
-  return "amber";
+// Matches the real committee's two-state verdict (lib/committee/types.ts
+// `Verdict`) — there's no third "hold"/"sell" state in the actual data.
+export function verdictTone(verdict: "BUY" | "NO_BUY"): Tone {
+  return verdict === "BUY" ? "buy" : "nobuy";
 }
