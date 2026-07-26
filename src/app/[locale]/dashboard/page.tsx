@@ -1,5 +1,6 @@
-import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { Dashboard } from "@/components/terminal/dashboard";
+import "@/components/terminal/terminal.css";
 
 export default function DashboardPage() {
-  return <DashboardShell />;
+  return <Dashboard />;
 }

@@ -1,0 +1,88 @@
+/* Design system for the "Verdict Intelligence Terminal" dashboard.
+   Deliberately separate from globals.css glassmorphism system — this is a
+   distinct visual language (dense, flat, institutional terminal — not a
+   glassy SaaS card dashboard) and must not bleed into the marketing site or
+   auth pages, which keep the original design language. */
+
+.command-terminal {
+  --term-bg: #080b0e;
+  --term-panel: #0d1115;
+  --term-panel-elevated: #11161b;
+  --term-border: rgba(255, 255, 255, 0.07);
+  --term-border-strong: rgba(255, 255, 255, 0.14);
+  --term-text: #f1f3f5;
+  --term-text-mid: #a4abb3;
+  --term-text-dim: #7c858f;
+  --term-buy: #2ed47a;
+  --term-nobuy: #f15b4f;
+  --term-cyan: #4bb4d6;
+  --term-violet: #8b93f0;
+  --term-amber: #f0b429;
+
+  background: var(--term-bg);
+  color: var(--term-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.command-terminal .term-mono {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+.command-terminal .term-panel {
+  background: var(--term-panel);
+  border: 1px solid var(--term-border);
+}
+
+.command-terminal .term-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--term-border);
+}
+
+.command-terminal .term-eyebrow {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--term-text-dim);
+}
+
+.command-terminal .term-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.command-terminal .term-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.command-terminal .term-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+}
+
+.command-terminal .term-grid-bg {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+@keyframes term-orb-pulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+
+.command-terminal .term-orb {
+  animation: term-orb-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes term-row-in {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.command-terminal .term-row-in {
+  animation: term-row-in 260ms ease-out both;
+}
