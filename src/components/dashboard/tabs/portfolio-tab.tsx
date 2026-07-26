@@ -13,8 +13,14 @@ import {
   useRecordSnapshot,
 } from "@/lib/queries/portfolio-queries";
 import { TransactionForm } from "@/components/dashboard/transaction-form";
+import { SamplePreview } from "@/components/dashboard/sample-preview";
 import { AllocationDonut } from "@/components/asset/allocation-donut";
 import { PortfolioValueChart } from "@/components/asset/portfolio-value-chart";
+
+const SAMPLE_HOLDINGS = [
+  { ticker: "NVDA", quantity: 12, avgCost: 150.2, price: 187.42 },
+  { ticker: "TSLA", quantity: 8, avgCost: 260.0, price: 241.08 },
+];
 
 export function PortfolioTab() {
   const t = useTranslations("Dashboard.portfolio");
@@ -53,15 +59,53 @@ export function PortfolioTab() {
 
   if (!user) {
     return (
-      <GlassCard className="max-w-md">
-        <p className="text-sm">{t("loginRequired")}</p>
-        <Link
-          href="/login"
-          className="mt-3 inline-block rounded-full bg-foreground px-4 py-2 text-xs font-medium text-background"
-        >
-          {t("loginCta")}
-        </Link>
-      </GlassCard>
+      <SamplePreview message={t("loginRequired")} cta={t("loginCta")}>
+        <div className="flex flex-col gap-4">
+          <GlassCard strong className="max-w-2xl">
+            <p className="text-sm text-foreground-muted">{t("totalValue")}</p>
+            <div className="mt-1 flex items-baseline gap-3">
+              <p className="text-3xl font-semibold tabular-nums">$84,210.55</p>
+              <span className="rounded-full bg-buy-soft px-2.5 py-1 text-sm font-medium text-buy tabular-nums">
+                +3,120 (+3.9%)
+              </span>
+            </div>
+          </GlassCard>
+
+          <div className="grid max-w-2xl grid-cols-1 gap-4 md:grid-cols-2">
+            {SAMPLE_HOLDINGS.map((h) => {
+              const pnl = (h.price - h.avgCost) * h.quantity;
+              const pnlPct = ((h.price - h.avgCost) / h.avgCost) * 100;
+              const positive = pnl >= 0;
+              return (
+                <GlassCard key={h.ticker} className="flex flex-col gap-2">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">{h.ticker}</p>
+                      <p className="text-xs text-foreground-muted">
+                        {h.quantity} {t("shares")} @ ${h.avgCost.toFixed(2)}
+                      </p>
+                    </div>
+                    <p className="text-sm tabular-nums">
+                      ${(h.price * h.quantity).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    </p>
+                  </div>
+                  <span
+                    className={
+                      positive
+                        ? "w-fit rounded-full bg-buy-soft px-2 py-0.5 text-xs font-medium text-buy tabular-nums"
+                        : "w-fit rounded-full bg-nobuy-soft px-2 py-0.5 text-xs font-medium text-nobuy tabular-nums"
+                    }
+                  >
+                    {positive ? "+" : ""}
+                    {pnl.toFixed(2)} ({positive ? "+" : ""}
+                    {pnlPct.toFixed(1)}%)
+                  </span>
+                </GlassCard>
+              );
+            })}
+          </div>
+        </div>
+      </SamplePreview>
     );
   }
 

@@ -6,11 +6,11 @@ import { ChevronDown, Lightbulb, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useAlerts } from "@/lib/queries/dashboard-queries";
 import { GlassCard } from "@/components/ui/glass-card";
-import { Link } from "@/i18n/navigation";
 import { useUser } from "@/lib/supabase/use-user";
 import { useReadAlerts } from "@/lib/use-read-alerts";
 import { AlertRuleForm } from "@/components/dashboard/alert-rule-form";
 import { AlertRuleList } from "@/components/dashboard/alert-rule-list";
+import { SamplePreview } from "@/components/dashboard/sample-preview";
 import type { AlertItem } from "@/lib/mock/data";
 
 export function AlertsTab() {
@@ -93,15 +93,31 @@ export function AlertsTab() {
       <div className="max-w-2xl">
         <p className="mb-2 text-sm text-foreground-muted">{t("myRules")}</p>
         {!userLoading && !user && (
-          <GlassCard>
-            <p className="text-sm">{t("loginRequired")}</p>
-            <Link
-              href="/login"
-              className="mt-3 inline-block rounded-full bg-foreground px-4 py-2 text-xs font-medium text-background"
-            >
-              {t("loginCta")}
-            </Link>
-          </GlassCard>
+          <SamplePreview message={t("loginRequired")} cta={t("loginCta")}>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between rounded-lg border border-buy/40 bg-buy-soft px-3 py-2 text-sm">
+                <div>
+                  <p className="font-medium">
+                    NVDA <span className="font-normal text-foreground-muted">{t("priceAbove")} $180.00</span>
+                  </p>
+                  <p className="text-xs text-foreground-muted">{t("currentPrice")}: $187.42</p>
+                </div>
+                <span className="flex items-center gap-1.5 text-xs text-buy">
+                  <span className="h-1.5 w-1.5 rounded-full bg-buy shadow-[0_0_6px_var(--accent-buy)]" />
+                  {t("triggered")}
+                </span>
+              </div>
+              <div className="flex items-center justify-between rounded-lg border border-border-subtle px-3 py-2 text-sm">
+                <div>
+                  <p className="font-medium">
+                    TSLA <span className="font-normal text-foreground-muted">{t("priceBelow")} $200.00</span>
+                  </p>
+                  <p className="text-xs text-foreground-muted">{t("currentPrice")}: $241.08</p>
+                </div>
+                <span className="text-xs text-foreground-muted">{t("waiting")}</span>
+              </div>
+            </div>
+          </SamplePreview>
         )}
         {user && (
           <GlassCard className="flex flex-col gap-4">

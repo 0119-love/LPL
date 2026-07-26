@@ -3,7 +3,8 @@
     "brand": "Verdict",
     "brandTag": "5인 투자 위원회",
     "errorGeneric": "문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
-    "retry": "다시 시도"
+    "retry": "다시 시도",
+    "sampleBadge": "예시 데이터"
   },
   "Nav": {
     "features": "기능",
@@ -104,6 +105,7 @@
       "noResults": "검색 결과가 없습니다",
       "loginRequired": "로그인하고 관심 종목을 추가해보세요.",
       "loginCta": "로그인",
+      "demoNotice": "데모 시세입니다 · 로그인하고 나만의 워치리스트를 만들어보세요.",
       "emptyWatchlist": "아직 추가한 종목이 없습니다. 위 검색창에서 종목을 찾아 추가해보세요.",
       "quoteUnavailable": "시세를 불러올 수 없습니다",
       "remove": "{ticker} 관심종목에서 삭제",
@@ -124,7 +126,12 @@
       "timelineLabel": "판정 변경 타임라인 (최근 21일)",
       "daysAgoSuffix": "일 전",
       "correct": "적중",
-      "incorrect": "빗나감"
+      "incorrect": "빗나감",
+      "loginRequired": "로그인하고 관심 종목의 위원회 판정을 받아보세요.",
+      "loginCta": "로그인",
+      "emptyWatchlist": "시세 탭에서 관심 종목을 먼저 추가해주세요.",
+      "generating": "위원회가 판정 중입니다…",
+      "generationFailed": "판정 생성에 실패했습니다."
     },
     "alerts": {
       "title": "리스크 알림",

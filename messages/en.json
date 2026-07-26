@@ -3,7 +3,8 @@
     "brand": "Verdict",
     "brandTag": "The 5-Member Investment Committee",
     "errorGeneric": "Something went wrong. Please try again.",
-    "retry": "Retry"
+    "retry": "Retry",
+    "sampleBadge": "Sample data"
   },
   "Nav": {
     "features": "Features",
@@ -104,6 +105,7 @@
       "noResults": "No results",
       "loginRequired": "Log in to add symbols to your watchlist.",
       "loginCta": "Log in",
+      "demoNotice": "Sample prices — log in to build your own watchlist.",
       "emptyWatchlist": "No symbols yet. Search above to add your first one.",
       "quoteUnavailable": "Quote unavailable",
       "remove": "Remove {ticker} from watchlist",
@@ -124,7 +126,12 @@
       "timelineLabel": "Verdict timeline (last 21 days)",
       "daysAgoSuffix": "d ago",
       "correct": "Right",
-      "incorrect": "Wrong"
+      "incorrect": "Wrong",
+      "loginRequired": "Log in to get committee verdicts on your watchlist.",
+      "loginCta": "Log in",
+      "emptyWatchlist": "Add a symbol to your watchlist on the Market tab first.",
+      "generating": "The committee is deliberating…",
+      "generationFailed": "Couldn't generate a verdict."
     },
     "alerts": {
       "title": "Risk alerts",
