@@ -10,6 +10,14 @@ import { OpportunityRadarSection } from "./sections/opportunity-radar-section";
 import { IntelligenceFeedSection } from "./sections/intelligence-feed-section";
 import { PortfolioPulseSection } from "./sections/portfolio-pulse-section";
 import { MarketMoversSection } from "./sections/market-movers-section";
+import { SectorsSection } from "./sections/sectors-section";
+import { GlobalMapSection } from "./sections/global-map-section";
+import { ResearchHubSection } from "./sections/research-hub-section";
+import { NewsScannerSection } from "./sections/news-scanner-section";
+import { WatchlistSection } from "./sections/watchlist-section";
+import { PositionsSection } from "./sections/positions-section";
+import { PerformanceSection } from "./sections/performance-section";
+import { SignalCenterSection } from "./sections/signal-center-section";
 import { capitalFlowNodes, capitalFlowLinks } from "@/lib/terminal/mock-data";
 
 export function Dashboard() {
@@ -69,6 +77,23 @@ export function Dashboard() {
             <PortfolioPulseSection />
           </div>
         </div>
+      </div>
+
+      {/* MARKET INTELLIGENCE / AI INTELLIGENCE — real data per sidebar item,
+          same 2-column masonry pattern as the main bento above. */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <SectorsSection />
+        <GlobalMapSection />
+        <ResearchHubSection />
+        <NewsScannerSection />
+      </div>
+
+      {/* PORTFOLIO / ALERTS & SIGNALS — real, requires login. */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <WatchlistSection />
+        <PositionsSection />
+        <PerformanceSection />
+        <SignalCenterSection />
       </div>
     </AppShell>
   );

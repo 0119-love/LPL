@@ -1,8 +1,14 @@
 import { useEffect, useRef } from "react";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { YahooQuote, Candle, ChartRange } from "@/lib/yahoo/client";
+import type { FinnhubNewsItem } from "@/lib/finnhub/client";
 import { useUser } from "@/lib/supabase/use-user";
-import { fetchAlertRules } from "@/lib/supabase/alert-rules";
+import {
+  createAlertRule,
+  deleteAlertRule,
+  fetchAlertRules,
+  type AlertCondition,
+} from "@/lib/supabase/alert-rules";
 import {
   toVotes,
   useCommitteeVerdicts,
@@ -100,4 +106,40 @@ export function useAlertRules() {
 export function useAlertRuleCount() {
   const { data } = useAlertRules();
   return { data: data?.length };
+}
+
+export function useCreateAlertRule() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { ticker: string; name: string; condition: AlertCondition; threshold: number }) =>
+      createAlertRule(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["alert-rules"] });
+    },
+  });
+}
+
+export function useDeleteAlertRule() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => deleteAlertRule(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["alert-rules"] });
+    },
+  });
+}
+
+async function fetchCompanyNews(symbol: string): Promise<FinnhubNewsItem[]> {
+  const res = await fetch(`/api/finnhub/news?symbol=${symbol}`);
+  if (!res.ok) throw new Error("news_failed");
+  const data = await res.json();
+  return data.news as FinnhubNewsItem[];
+}
+
+export function useCompanyNews(symbol: string) {
+  return useQuery({
+    queryKey: ["company-news", symbol],
+    queryFn: () => fetchCompanyNews(symbol),
+    staleTime: 5 * 60_000,
+  });
 }

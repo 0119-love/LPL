@@ -66,3 +66,28 @@ export type FinnhubProfile = {
 export function getProfile(symbol: string) {
   return finnhubFetch<FinnhubProfile>("/stock/profile2", { symbol }, 86_400);
 }
+
+export type FinnhubNewsItem = {
+  id: number;
+  headline: string;
+  summary: string;
+  source: string;
+  url: string;
+  datetime: number; // unix seconds
+  related: string;
+  image: string;
+};
+
+function isoDate(d: Date) {
+  return d.toISOString().slice(0, 10);
+}
+
+export function getCompanyNews(symbol: string) {
+  const to = new Date();
+  const from = new Date(to.getTime() - 14 * 24 * 60 * 60 * 1000);
+  return finnhubFetch<FinnhubNewsItem[]>(
+    "/company-news",
+    { symbol, from: isoDate(from), to: isoDate(to) },
+    300,
+  );
+}
