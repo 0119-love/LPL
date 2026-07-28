@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { ArrowRight } from "lucide-react";
 import { Panel } from "./panel";
 import { CommitteeConsensus } from "./committee-consensus";
 import { CommitteeDisagreement } from "./committee-disagreement";
@@ -46,24 +45,14 @@ export function VerdictPanel({
               <CommitteeMember
                 key={member.id}
                 initial={member.initial}
-                name={member.name}
                 role={member.role}
+                description={member.description}
                 verdict={member.verdict}
                 score={member.score}
               />
             ))}
           </div>
-          {footer ?? (
-            <div className="border-t border-[var(--term-border)] px-5 py-3">
-              <a
-                href="#"
-                className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[var(--term-buy)] hover:opacity-80"
-              >
-                View full committee
-                <ArrowRight size={13} strokeWidth={2} />
-              </a>
-            </div>
-          )}
+          {footer}
         </div>
       </div>
     </Panel>

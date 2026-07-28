@@ -5,6 +5,7 @@ import { IntelligenceEvent } from "../ui/intelligence-event";
 import { useCommitteeVerdicts } from "@/lib/queries/committee-queries";
 import { deriveIntelligenceFromCommittee } from "@/lib/terminal/derive";
 import { intelligenceFeed as fallbackFeed } from "@/lib/terminal/mock-data";
+import { Link } from "@/i18n/navigation";
 
 // Reads the same cached committee data InvestmentCommitteeSection fetches
 // (and, when logged in, triggers generation for) — no separate feed engine,
@@ -23,9 +24,12 @@ export function IntelligenceFeedSection() {
         isPending ? (
           <span className="text-[var(--term-text-dim)]">Loading…</span>
         ) : (
-          <a href="#" className="text-[var(--term-text-dim)] hover:text-[var(--term-text)]">
+          <Link
+            href={`/asset/${SPOTLIGHT_TICKER}`}
+            className="text-[var(--term-text-dim)] hover:text-[var(--term-text)]"
+          >
             View all
-          </a>
+          </Link>
         )
       }
       noPadding

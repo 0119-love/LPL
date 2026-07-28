@@ -6,8 +6,8 @@ export type CommitteeVerdict = "BUY" | "NO_BUY";
 export type CommitteeMemberData = {
   id: string;
   initial: string;
-  name: string;
   role: string;
+  description: string;
   verdict: CommitteeVerdict;
   score: number;
 };
@@ -17,14 +17,14 @@ const VERDICT_LABEL: Record<CommitteeVerdict, string> = { BUY: "BUY", NO_BUY: "N
 
 export function CommitteeMember({
   initial,
-  name,
   role,
+  description,
   verdict,
   score,
 }: {
   initial: string;
-  name: string;
   role: string;
+  description: string;
   verdict: CommitteeVerdict;
   score: number;
 }) {
@@ -37,8 +37,8 @@ export function CommitteeMember({
           {initial}
         </div>
         <div className="min-w-0">
-          <p className="text-[12.5px] font-medium leading-tight truncate">{name}</p>
-          <p className="text-[10.5px] text-[var(--term-text-dim)] truncate">{role}</p>
+          <p className="text-[12.5px] font-medium leading-tight truncate">{role}</p>
+          <p className="text-[10.5px] text-[var(--term-text-dim)] truncate">{description}</p>
         </div>
       </div>
       <span className={`text-[11.5px] font-semibold ${TONE_TEXT_CLASS[tone]}`}>

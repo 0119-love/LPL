@@ -14,7 +14,11 @@ import { capitalFlowNodes, capitalFlowLinks } from "@/lib/terminal/mock-data";
 
 export function Dashboard() {
   return (
-    <AppShell sidebar={<CommandSidebar />} header={<CommandHeader />}>
+    <AppShell
+      sidebar={<CommandSidebar />}
+      header={<CommandHeader />}
+      ticker={<MarketMoversSection />}
+    >
       <MarketOverviewSection />
 
       {/* MAIN BENTO — two independent columns so panel heights follow their
@@ -23,12 +27,12 @@ export function Dashboard() {
           Radar, and Portfolio Pulse stack down the right. */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
         <div className="xl:col-span-7 flex flex-col gap-4">
-          <div id="section-committee">
+          <div id="section-committee" className="rounded-lg">
             <InvestmentCommitteeSection />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div id="section-flow">
+            <div id="section-flow" className="rounded-lg">
               {/* No real regional capital-flow data source exists (would need
                   a dedicated flows provider) — kept illustrative, labeled as such. */}
               <Panel eyebrow="Capital Flow" meta="Global · Illustrative" noPadding>
@@ -46,28 +50,26 @@ export function Dashboard() {
               </Panel>
             </div>
 
-            <div id="section-intelligence">
+            <div id="section-intelligence" className="rounded-lg">
               <IntelligenceFeedSection />
             </div>
           </div>
         </div>
 
         <div className="xl:col-span-5 flex flex-col gap-4">
-          <div id="section-regime">
+          <div id="section-regime" className="rounded-lg">
             <MarketRegimeSection />
           </div>
 
-          <div id="section-assets">
+          <div id="section-assets" className="rounded-lg">
             <OpportunityRadarSection />
           </div>
 
-          <div id="section-portfolio">
+          <div id="section-portfolio" className="rounded-lg">
             <PortfolioPulseSection />
           </div>
         </div>
       </div>
-
-      <MarketMoversSection />
     </AppShell>
   );
 }

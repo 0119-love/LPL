@@ -87,12 +87,17 @@ export function useSpotlightCommittee(ticker: string, name: string) {
   };
 }
 
-/** Count of the user's configured price-alert rules, for the header bell badge. */
-export function useAlertRuleCount() {
+/** The user's real configured price-alert rules — backs both the bell badge and its dropdown. */
+export function useAlertRules() {
   const { user } = useUser();
   return useQuery({
-    queryKey: ["alert-rule-count"],
-    queryFn: async () => (await fetchAlertRules()).length,
+    queryKey: ["alert-rules"],
+    queryFn: fetchAlertRules,
     enabled: !!user,
   });
+}
+
+export function useAlertRuleCount() {
+  const { data } = useAlertRules();
+  return { data: data?.length };
 }

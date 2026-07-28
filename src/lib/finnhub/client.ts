@@ -8,14 +8,18 @@ function requireApiKey() {
   return key;
 }
 
-async function finnhubFetch<T>(path: string, params: Record<string, string>) {
+async function finnhubFetch<T>(
+  path: string,
+  params: Record<string, string>,
+  revalidateSeconds = 15,
+) {
   const url = new URL(`${FINNHUB_BASE}${path}`);
   for (const [key, value] of Object.entries(params)) {
     url.searchParams.set(key, value);
   }
   url.searchParams.set("token", requireApiKey());
 
-  const res = await fetch(url, { next: { revalidate: 15 } });
+  const res = await fetch(url, { next: { revalidate: revalidateSeconds } });
   if (!res.ok) {
     throw new Error(`Finnhub ${path} failed: ${res.status}`);
   }
@@ -49,4 +53,16 @@ export type FinnhubQuote = {
 
 export function getQuote(symbol: string) {
   return finnhubFetch<FinnhubQuote>("/quote", { symbol });
+}
+
+export type FinnhubProfile = {
+  logo: string;
+  name: string;
+  ticker: string;
+  weburl: string;
+};
+
+// Company logos don't change intraday, so this is cached far longer than quotes.
+export function getProfile(symbol: string) {
+  return finnhubFetch<FinnhubProfile>("/stock/profile2", { symbol }, 86_400);
 }

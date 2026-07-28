@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   LayoutGrid,
   LineChart,
@@ -50,12 +50,40 @@ const navGroups: SidebarNavGroup[] = sidebarGroups.map((group) => ({
   })),
 }));
 
+const HIGHLIGHT_MS = 5000;
+
 export function CommandSidebar() {
   const [active, setActive] = useState("command");
+  const highlightTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const highlightedEl = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (highlightTimeout.current) clearTimeout(highlightTimeout.current);
+    };
+  }, []);
 
   const handleSelect = (id: string) => {
     setActive(id);
-    document.getElementById(`section-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const target = document.getElementById(`section-${id}`);
+    if (!target) return;
+
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    if (highlightTimeout.current) clearTimeout(highlightTimeout.current);
+    highlightedEl.current?.classList.remove("term-section-highlight");
+
+    // Force reflow so re-selecting the same section restarts the glow.
+    target.classList.remove("term-section-highlight");
+    void target.offsetWidth;
+    target.classList.add("term-section-highlight");
+    highlightedEl.current = target;
+
+    highlightTimeout.current = setTimeout(() => {
+      target.classList.remove("term-section-highlight");
+      highlightedEl.current = null;
+      highlightTimeout.current = null;
+    }, HIGHLIGHT_MS);
   };
 
   return (

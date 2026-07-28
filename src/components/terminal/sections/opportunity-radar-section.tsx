@@ -2,7 +2,7 @@
 
 import { Panel } from "../ui/panel";
 import { OpportunityRow } from "../ui/opportunity-row";
-import { useQuotes } from "@/lib/queries/market-queries";
+import { useLogos, useQuotes } from "@/lib/queries/market-queries";
 import { useSparklines } from "@/lib/queries/terminal-queries";
 import { opportunities as fallbackOpportunities } from "@/lib/terminal/mock-data";
 
@@ -17,6 +17,7 @@ function scoreFromChange(changePct: number) {
 export function OpportunityRadarSection() {
   const { data: quotes, isPending } = useQuotes(TICKERS);
   const sparklines = useSparklines(TICKERS, "1M");
+  const { data: logos } = useLogos(TICKERS);
 
   return (
     <Panel eyebrow="Opportunity Radar" meta={isPending ? "Loading…" : `Top ${fallbackOpportunities.length}`} noPadding>
@@ -35,6 +36,7 @@ export function OpportunityRadarSection() {
               score={q ? scoreFromChange(changePct) : fallback.score}
               changePct={changePct}
               spark={spark}
+              logoUrl={logos?.[fallback.ticker]}
             />
           );
         })}

@@ -32,7 +32,7 @@ export function CommandSearch() {
   }, []);
 
   const results = (data?.result ?? [])
-    .filter((r) => r.type === "Common Stock")
+    .filter((r) => r.type === "Common Stock" || r.type === "ETP")
     .slice(0, 8);
 
   function goToTicker(symbol: string) {
@@ -79,7 +79,7 @@ export function CommandSearch() {
         onBlur={() => setTimeout(() => setOpen(false), 150)}
         onKeyDown={onKeyDownInput}
         type="text"
-        placeholder="Search ticker, sector, analyst, report..."
+        placeholder="Search ticker or company..."
         className="w-full rounded-md border border-[var(--term-border)] bg-white/[0.03] py-2 pl-9 pr-14 text-[12.5px] text-[var(--term-text)] placeholder:text-[var(--term-text-dim)] outline-none transition-colors focus:border-[var(--term-border-strong)] focus:bg-white/[0.05]"
       />
       <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 rounded border border-[var(--term-border)] bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-medium text-[var(--term-text-dim)]">

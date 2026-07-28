@@ -86,3 +86,56 @@
 .command-terminal .term-row-in {
   animation: term-row-in 260ms ease-out both;
 }
+
+/* Ticker marquee: track renders its content twice back-to-back and scrolls
+   exactly half its own width, so the seam is invisible and the loop is
+   perfectly continuous regardless of how much content is in it. */
+@keyframes term-ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.command-terminal .term-ticker-track {
+  animation: term-ticker-scroll 32s linear infinite;
+}
+
+.command-terminal .term-ticker-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .command-terminal .term-ticker-track {
+    animation: none;
+  }
+}
+
+/* Sidebar nav → section highlight: pulses a glow ring around the target
+   panel for 5s so the user can find where they just jumped to. */
+@keyframes term-section-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px var(--term-buy),
+      0 0 0 4px rgba(46, 212, 122, 0.16),
+      0 0 22px 2px rgba(46, 212, 122, 0.35);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px var(--term-buy),
+      0 0 0 4px rgba(46, 212, 122, 0.28),
+      0 0 40px 10px rgba(46, 212, 122, 0.65);
+  }
+}
+
+.command-terminal .term-section-highlight {
+  border-radius: 0.5rem;
+  animation: term-section-glow 1s ease-in-out 5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .command-terminal .term-section-highlight {
+    animation: none;
+    box-shadow:
+      0 0 0 1px var(--term-buy),
+      0 0 24px 4px rgba(46, 212, 122, 0.4);
+  }
+}

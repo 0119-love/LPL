@@ -10,13 +10,22 @@ import type { CommitteeMemberData } from "@/components/terminal/ui/committee-mem
 import type { IntelligenceEvent } from "@/lib/terminal/mock-data";
 
 // Radar/table role labels, in the same fixed member order used across the
-// rest of the app (m1 Kang ... m5 Devon).
+// rest of the app (m1 Kang ... m5 Devon). The committee table shows these
+// functional roles instead of personal names.
 const ROLE_BY_MEMBER_ID: Record<string, string> = {
   m1: "Chart Analyst",
   m2: "News Analyst",
   m3: "Fundamental Analyst",
   m4: "Market Strategist",
   m5: "Deep Research",
+};
+
+const DESCRIPTION_BY_MEMBER_ID: Record<string, string> = {
+  m1: "Price action & technical patterns",
+  m2: "Breaking news & sentiment shifts",
+  m3: "Financial statements & valuation",
+  m4: "Macro trends & positioning",
+  m5: "Multi-source deep-dive synthesis",
 };
 
 const DIMENSION_BY_MEMBER_ID: Record<string, string> = {
@@ -68,12 +77,12 @@ export function deriveRadarDimensions(votes: Vote[]) {
 
 export function deriveMemberRows(votes: Vote[]): CommitteeMemberData[] {
   return votes.map((v) => {
-    const member = committeeMembers.find((m) => m.id === v.memberId);
+    const role = ROLE_BY_MEMBER_ID[v.memberId] ?? "Analyst";
     return {
       id: v.memberId,
-      initial: member?.initial ?? "?",
-      name: member?.name ?? v.memberId,
-      role: ROLE_BY_MEMBER_ID[v.memberId] ?? "Analyst",
+      initial: role[0],
+      role,
+      description: DESCRIPTION_BY_MEMBER_ID[v.memberId] ?? "General analysis",
       verdict: v.verdict === "buy" ? "BUY" : "NO_BUY",
       score: bullishness(v),
     };
