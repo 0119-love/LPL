@@ -96,7 +96,19 @@
     "debtToEquity": "부채비율",
     "currentRatio": "유동비율",
     "beta": "베타",
-    "week52Range": "52주 범위"
+    "week52Range": "52주 범위",
+    "technicalTitle": "지표 요약",
+    "technicalOscillators": "오실레이터",
+    "technicalSummary": "요약",
+    "technicalMovingAverages": "무빙 애버리지",
+    "technicalBuy": "매수",
+    "technicalSell": "매도",
+    "technicalNeutral": "중립",
+    "technicalStrongBuy": "적극 매수",
+    "technicalStrongSell": "적극 매도",
+    "technicalInsufficientData": "이 구간은 지표를 계산할 데이터가 부족합니다",
+    "technicalError": "지표를 불러올 수 없습니다",
+    "technicalSampleNote": "실제 캔들 {count}개 기준"
   },
   "Dashboard": {
     "tabs": {

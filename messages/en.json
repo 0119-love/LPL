@@ -96,7 +96,19 @@
     "debtToEquity": "Debt/Equity",
     "currentRatio": "Current ratio",
     "beta": "Beta",
-    "week52Range": "52-week range"
+    "week52Range": "52-week range",
+    "technicalTitle": "Technical Summary",
+    "technicalOscillators": "Oscillators",
+    "technicalSummary": "Summary",
+    "technicalMovingAverages": "Moving Averages",
+    "technicalBuy": "Buy",
+    "technicalSell": "Sell",
+    "technicalNeutral": "Neutral",
+    "technicalStrongBuy": "Strong Buy",
+    "technicalStrongSell": "Strong Sell",
+    "technicalInsufficientData": "Not enough data yet to score this range",
+    "technicalError": "Couldn't load technical indicators",
+    "technicalSampleNote": "Based on {count} real candles"
   },
   "Dashboard": {
     "tabs": {

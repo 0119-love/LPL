@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { GlassCard } from "@/components/ui/glass-card";
 import { useQuotes, useSymbolSearch } from "@/lib/queries/market-queries";
 import { PriceChart } from "./price-chart";
+import { TechnicalSummaryPanel } from "./technical-summary-panel";
 import { FundamentalsPanel } from "./fundamentals-panel";
 import { AssetCommitteePanel } from "./asset-committee-panel";
 
@@ -51,6 +52,10 @@ export function AssetDetailView({ ticker }: { ticker: string }) {
       <GlassCard strong className="mt-6">
         <PriceChart ticker={ticker} />
       </GlassCard>
+
+      <div className="mt-6">
+        <TechnicalSummaryPanel ticker={ticker} />
+      </div>
 
       <div className="mt-6">
         <h2 className="mb-3 text-sm font-medium text-foreground-muted">
